@@ -1,0 +1,8 @@
+{
+  "name": "Lumina Beauty AI",
+  "description": "A premium e-commerce platform featuring AI-powered makeup trials and facial feature analysis for personalized product recommendations.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
