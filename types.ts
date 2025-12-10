@@ -3,12 +3,16 @@ export enum Page {
   HOME = 'HOME',
   DETAIL = 'DETAIL',
   AI_MAKEUP = 'AI_MAKEUP',
-  FACE_ANALYSIS = 'FACE_ANALYSIS'
+  FACE_ANALYSIS = 'FACE_ANALYSIS',
+  CART = 'CART'
 }
 
 export enum Language {
   EN = 'EN',
-  ZH = 'ZH'
+  ZH = 'ZH',
+  JP = 'JP',
+  KR = 'KR',
+  FR = 'FR'
 }
 
 export interface Product {
@@ -22,6 +26,10 @@ export interface Product {
   description: string;
 }
 
+export interface CartItem extends Product {
+  quantity: number;
+}
+
 export interface UserPreferences {
   eyeShape?: string;
   noseShape?: string;
@@ -30,7 +38,6 @@ export interface UserPreferences {
 
 export interface Translation {
   [key: string]: {
-    [Language.EN]: string;
-    [Language.ZH]: string;
+    [key in Language]: string;
   };
 }
