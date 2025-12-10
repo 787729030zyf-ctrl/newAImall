@@ -6,7 +6,7 @@ export const MOCK_PRODUCTS: Product[] = [
     title: "Velvet Matte Lipstick - Ruby Woo",
     price: 129,
     sales: 12000,
-    image: "https://picsum.photos/400/400?random=1",
+    image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?q=80&w=600&auto=format&fit=crop",
     category: "Lips",
     tags: ["Matte", "Long-lasting"],
     description: "Iconic red lipstick with a velvet matte finish."
@@ -16,7 +16,7 @@ export const MOCK_PRODUCTS: Product[] = [
     title: "Hydrating Foundation - Ivory",
     price: 249,
     sales: 8500,
-    image: "https://picsum.photos/400/400?random=2",
+    image: "https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?q=80&w=600&auto=format&fit=crop",
     category: "Face",
     tags: ["Full Coverage", "Hydrating"],
     description: "Flawless coverage that lasts all day."
@@ -26,7 +26,7 @@ export const MOCK_PRODUCTS: Product[] = [
     title: "Volumizing Mascara",
     price: 89,
     sales: 22000,
-    image: "https://picsum.photos/400/400?random=3",
+    image: "https://images.unsplash.com/photo-1631214503851-a9223e071300?q=80&w=600&auto=format&fit=crop",
     category: "Eyes",
     tags: ["Waterproof", "Black"],
     description: "Dramatic volume and length for your lashes."
@@ -36,7 +36,7 @@ export const MOCK_PRODUCTS: Product[] = [
     title: "Rose Gold Eyeshadow Palette",
     price: 320,
     sales: 5400,
-    image: "https://picsum.photos/400/400?random=4",
+    image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=600&auto=format&fit=crop",
     category: "Eyes",
     tags: ["Shimmer", "Matte", "12 Colors"],
     description: "A versatile palette for day and night looks."
@@ -46,7 +46,7 @@ export const MOCK_PRODUCTS: Product[] = [
     title: "Soft Blush - Peachy Keen",
     price: 110,
     sales: 9000,
-    image: "https://picsum.photos/400/400?random=5",
+    image: "https://images.unsplash.com/photo-1515688594390-b649af70d282?q=80&w=600&auto=format&fit=crop",
     category: "Face",
     tags: ["Natural", "Powder"],
     description: "Adds a natural flush to your cheeks."
@@ -56,7 +56,7 @@ export const MOCK_PRODUCTS: Product[] = [
     title: "Liquid Eyeliner - Jet Black",
     price: 75,
     sales: 15000,
-    image: "https://picsum.photos/400/400?random=6",
+    image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=600&auto=format&fit=crop",
     category: "Eyes",
     tags: ["Precise", "Waterproof"],
     description: "Create sharp wings with ease."
