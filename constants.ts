@@ -26,7 +26,7 @@ export const MOCK_PRODUCTS: Product[] = [
     title: "Volumizing Mascara",
     price: 89,
     sales: 22000,
-    image: "https://images.unsplash.com/photo-1631214503851-a9223e071300?q=80&w=600&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1631214524020-7e18db9a8f92?q=80&w=600&auto=format&fit=crop",
     category: "Eyes",
     tags: ["Waterproof", "Black"],
     description: "Dramatic volume and length for your lashes."
@@ -36,7 +36,7 @@ export const MOCK_PRODUCTS: Product[] = [
     title: "Rose Gold Eyeshadow Palette",
     price: 320,
     sales: 5400,
-    image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=600&auto=format&fit=crop",
+    image: "https://zyflgj.oss-cn-beijing.aliyuncs.com/f70bfb49daaa62af702be204c12a51b3.jpg",
     category: "Eyes",
     tags: ["Shimmer", "Matte", "12 Colors"],
     description: "A versatile palette for day and night looks."
@@ -46,7 +46,7 @@ export const MOCK_PRODUCTS: Product[] = [
     title: "Soft Blush - Peachy Keen",
     price: 110,
     sales: 9000,
-    image: "https://images.unsplash.com/photo-1515688594390-b649af70d282?q=80&w=600&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1557205465-f3762edea6d3?q=80&w=600&auto=format&fit=crop",
     category: "Face",
     tags: ["Natural", "Powder"],
     description: "Adds a natural flush to your cheeks."
@@ -56,7 +56,7 @@ export const MOCK_PRODUCTS: Product[] = [
     title: "Liquid Eyeliner - Jet Black",
     price: 75,
     sales: 15000,
-    image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=600&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=600&auto=format&fit=crop",
     category: "Eyes",
     tags: ["Precise", "Waterproof"],
     description: "Create sharp wings with ease."
