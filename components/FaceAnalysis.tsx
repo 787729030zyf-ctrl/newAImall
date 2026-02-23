@@ -15,21 +15,21 @@ const FaceAnalysis: React.FC<FaceAnalysisProps> = ({ lang, onProductClick, onBac
   const [recommendations, setRecommendations] = useState<Product[]>([]);
 
   const eyes = [
-    { id: 'almond', label: 'Almond', icon: 'fa-eye' },
-    { id: 'round', label: 'Round', icon: 'fa-regular fa-eye' },
-    { id: 'monolid', label: 'Monolid', icon: 'fa-eye-slash' },
+    { id: 'almond', label: TRANSLATIONS.almond[lang], icon: 'fa-eye' },
+    { id: 'round', label: TRANSLATIONS.round[lang], icon: 'fa-regular fa-eye' },
+    { id: 'monolid', label: TRANSLATIONS.monolid[lang], icon: 'fa-eye-slash' },
   ];
 
   const noses = [
-    { id: 'button', label: 'Button', icon: 'fa-circle' },
-    { id: 'straight', label: 'Straight', icon: 'fa-grip-lines-vertical' },
-    { id: 'wide', label: 'Wide', icon: 'fa-cloud' },
+    { id: 'button', label: TRANSLATIONS.button[lang], icon: 'fa-circle' },
+    { id: 'straight', label: TRANSLATIONS.straight[lang], icon: 'fa-grip-lines-vertical' },
+    { id: 'wide', label: TRANSLATIONS.wide[lang], icon: 'fa-cloud' },
   ];
 
   const lips = [
-    { id: 'full', label: 'Full', icon: 'fa-heart' },
-    { id: 'thin', label: 'Thin', icon: 'fa-minus' },
-    { id: 'bow', label: 'Cupid Bow', icon: 'fa-kiss-wink-heart' },
+    { id: 'full', label: TRANSLATIONS.full[lang], icon: 'fa-heart' },
+    { id: 'thin', label: TRANSLATIONS.thin[lang], icon: 'fa-minus' },
+    { id: 'bow', label: TRANSLATIONS.bow[lang], icon: 'fa-kiss-wink-heart' },
   ];
 
   const handleSelection = (type: keyof UserPreferences, value: string) => {
@@ -155,7 +155,7 @@ const FaceAnalysis: React.FC<FaceAnalysisProps> = ({ lang, onProductClick, onBac
                onClick={() => { setStep(1); setPrefs({}); }}
                className="w-full mt-8 py-3 text-gray-500 font-medium underline"
              >
-               Start Over
+               {TRANSLATIONS.startOver[lang]}
              </button>
           </div>
         )}
@@ -175,7 +175,7 @@ const FaceAnalysis: React.FC<FaceAnalysisProps> = ({ lang, onProductClick, onBac
                 : 'bg-gradient-to-r from-primary to-pink-500 hover:shadow-xl transform hover:-translate-y-0.5'}
             `}
           >
-            {step === 3 ? TRANSLATIONS.getResults[lang] : 'Next'}
+            {step === 3 ? TRANSLATIONS.getResults[lang] : TRANSLATIONS.next[lang]}
           </button>
         )}
       </div>

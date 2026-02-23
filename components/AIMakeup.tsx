@@ -76,7 +76,7 @@ const AIMakeup: React.FC<AIMakeupProps> = ({ lang, onBack }) => {
               {/* Split View Slider Simulation (Visual only for effect) */}
               {resultImage && (
                  <div className="absolute bottom-2 right-2 bg-black/60 px-2 py-1 rounded text-xs">
-                    AI Generated
+                    {TRANSLATIONS.aiGenerated[lang]}
                  </div>
               )}
               {loading && (
@@ -130,7 +130,7 @@ const AIMakeup: React.FC<AIMakeupProps> = ({ lang, onBack }) => {
                 : 'bg-primary text-white shadow-[0_0_20px_rgba(255,77,79,0.4)] hover:shadow-[0_0_30px_rgba(255,77,79,0.6)] transform hover:scale-[1.02]'}
             `}
           >
-             {loading ? 'Processing...' : 'Apply Makeup'}
+             {loading ? TRANSLATIONS.processing[lang] : TRANSLATIONS.applyMakeup[lang]}
           </button>
         </div>
       </div>

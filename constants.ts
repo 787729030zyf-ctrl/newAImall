@@ -227,6 +227,13 @@ export const TRANSLATIONS: Translation = {
     [Language.KR]: "장바구니",
     [Language.FR]: "Mon panier"
   },
+  cart: {
+    [Language.EN]: "Cart",
+    [Language.ZH]: "购物车",
+    [Language.JP]: "カート",
+    [Language.KR]: "장바구니",
+    [Language.FR]: "Panier"
+  },
   checkout: { 
     [Language.EN]: "Checkout", 
     [Language.ZH]: "去结算",
@@ -282,5 +289,362 @@ export const TRANSLATIONS: Translation = {
     [Language.JP]: "マイページ",
     [Language.KR]: "마이페이지",
     [Language.FR]: "Moi"
+  },
+  searchPlaceholder: {
+    [Language.EN]: "Search products...",
+    [Language.ZH]: "搜索商品...",
+    [Language.JP]: "商品を検索...",
+    [Language.KR]: "상품 검색...",
+    [Language.FR]: "Rechercher des produits..."
+  },
+  popular: {
+    [Language.EN]: "Popular",
+    [Language.ZH]: "热门商品",
+    [Language.JP]: "人気商品",
+    [Language.KR]: "인기 상품",
+    [Language.FR]: "Populaire"
+  },
+  seeAll: {
+    [Language.EN]: "See All",
+    [Language.ZH]: "查看全部",
+    [Language.JP]: "すべて見る",
+    [Language.KR]: "모두 보기",
+    [Language.FR]: "Voir tout"
+  },
+  newSeason: {
+    [Language.EN]: "New Season",
+    [Language.ZH]: "新品上市",
+    [Language.JP]: "新シーズン",
+    [Language.KR]: "새 시즌",
+    [Language.FR]: "Nouvelle saison"
+  },
+  summerCollection: {
+    [Language.EN]: "Summer Collection",
+    [Language.ZH]: "夏季系列",
+    [Language.JP]: "サマーコレクション",
+    [Language.KR]: "여름 컬렉션",
+    [Language.FR]: "Collection d'été"
+  },
+  off: {
+    [Language.EN]: "Up to 50% OFF",
+    [Language.ZH]: "最高 5 折优惠",
+    [Language.JP]: "最大50%OFF",
+    [Language.KR]: "최대 50% 할인",
+    [Language.FR]: "Jusqu'à 50% de réduction"
+  },
+  description: {
+    [Language.EN]: "Description",
+    [Language.ZH]: "产品描述",
+    [Language.JP]: "説明",
+    [Language.KR]: "설명",
+    [Language.FR]: "Description"
+  },
+  tags: {
+    [Language.EN]: "Tags",
+    [Language.ZH]: "标签",
+    [Language.JP]: "タグ",
+    [Language.KR]: "태그",
+    [Language.FR]: "Mots-clés"
+  },
+  premiumMember: {
+    [Language.EN]: "Premium Member",
+    [Language.ZH]: "高级会员",
+    [Language.JP]: "プレミアム会員",
+    [Language.KR]: "프리미엄 회원",
+    [Language.FR]: "Membre Premium"
+  },
+  myFavorites: {
+    [Language.EN]: "My Favorites",
+    [Language.ZH]: "我的收藏",
+    [Language.JP]: "お気に入り",
+    [Language.KR]: "내 즐겨찾기",
+    [Language.FR]: "Mes favoris"
+  },
+  myOrders: {
+    [Language.EN]: "My Orders",
+    [Language.ZH]: "我的订单",
+    [Language.JP]: "注文履歴",
+    [Language.KR]: "내 주문",
+    [Language.FR]: "Mes commandes"
+  },
+  settings: {
+    [Language.EN]: "Settings",
+    [Language.ZH]: "设置",
+    [Language.JP]: "設定",
+    [Language.KR]: "설정",
+    [Language.FR]: "Paramètres"
+  },
+  orderSuccessDesc: {
+    [Language.EN]: "Your beauty products are on the way!",
+    [Language.ZH]: "您的美妆产品正在配送中！",
+    [Language.JP]: "美容製品が配送中です！",
+    [Language.KR]: "뷰티 제품이 배송 중입니다!",
+    [Language.FR]: "Vos produits de beauté sont en route !"
+  },
+  redefiningBeauty: {
+    [Language.EN]: "Redefining Beauty",
+    [Language.ZH]: "重塑美妆体验",
+    [Language.JP]: "美を再定義する",
+    [Language.KR]: "아름다움을 재정의하다",
+    [Language.FR]: "Redéfinir la beauté"
+  },
+  orLoginWith: {
+    [Language.EN]: "Or login with",
+    [Language.ZH]: "其他登录方式",
+    [Language.JP]: "または以下でログイン",
+    [Language.KR]: "또는 다음으로 로그인",
+    [Language.FR]: "Ou connectez-vous avec"
+  },
+  topSeller: {
+    [Language.EN]: "Top Seller",
+    [Language.ZH]: "热卖爆款",
+    [Language.JP]: "ベストセラー",
+    [Language.KR]: "베스트셀러",
+    [Language.FR]: "Meilleure vente"
+  },
+  shop: {
+    [Language.EN]: "Shop",
+    [Language.ZH]: "店铺",
+    [Language.JP]: "ショップ",
+    [Language.KR]: "상점",
+    [Language.FR]: "Boutique"
+  },
+  chat: {
+    [Language.EN]: "Chat",
+    [Language.ZH]: "客服",
+    [Language.JP]: "チャット",
+    [Language.KR]: "채팅",
+    [Language.FR]: "Chat"
+  },
+  luminaUser: {
+    [Language.EN]: "Lumina User",
+    [Language.ZH]: "Lumina 用户",
+    [Language.JP]: "Lumina ユーザー",
+    [Language.KR]: "루미나 사용자",
+    [Language.FR]: "Utilisateur Lumina"
+  },
+  prod1Title: {
+    [Language.EN]: "Velvet Matte Lipstick - Ruby Woo",
+    [Language.ZH]: "丝绒哑光口红 - 复古红",
+    [Language.JP]: "ベルベットマットリップスティック - ルビーウー",
+    [Language.KR]: "벨벳 매트 립스틱 - 루비 우",
+    [Language.FR]: "Rouge à Lèvres Mat Velours - Ruby Woo"
+  },
+  prod1Desc: {
+    [Language.EN]: "Iconic red lipstick with a velvet matte finish.",
+    [Language.ZH]: "经典的复古红色口红，丝绒哑光质地。",
+    [Language.JP]: "ベルベットのようなマットな仕上がりの象徴的な赤の口紅。",
+    [Language.KR]: "벨벳 매트 피니시의 아이코닉한 레드 립스틱.",
+    [Language.FR]: "Rouge à lèvres rouge emblématique avec un fini mat velouté."
+  },
+  prod2Title: {
+    [Language.EN]: "Hydrating Foundation - Ivory",
+    [Language.ZH]: "水润粉底液 - 象牙色",
+    [Language.JP]: "ハイドレイティングファンデーション - アイボリー",
+    [Language.KR]: "하이드레이팅 파운데이션 - 아이보리",
+    [Language.FR]: "Fond de Teint Hydratant - Ivoire"
+  },
+  prod2Desc: {
+    [Language.EN]: "Flawless coverage that lasts all day.",
+    [Language.ZH]: "全天候持久遮瑕，打造无暇妆感。",
+    [Language.JP]: "一日中続く完璧なカバー力。",
+    [Language.KR]: "하루 종일 지속되는 결점 없는 커버리지.",
+    [Language.FR]: "Une couvrance impeccable qui dure toute la journée."
+  },
+  prod3Title: {
+    [Language.EN]: "Volumizing Mascara",
+    [Language.ZH]: "浓密睫毛膏",
+    [Language.JP]: "ボリュームマスカラ",
+    [Language.KR]: "볼륨 마스카라",
+    [Language.FR]: "Mascara Volumateur"
+  },
+  prod3Desc: {
+    [Language.EN]: "Dramatic volume and length for your lashes.",
+    [Language.ZH]: "为您的睫毛带来惊人的浓密和修长效果。",
+    [Language.JP]: "まつげにドラマチックなボリュームと長さを与えます。",
+    [Language.KR]: "속눈썹에 드라마틱한 볼륨과 길이를 선사합니다.",
+    [Language.FR]: "Volume et longueur dramatiques pour vos cils."
+  },
+  prod4Title: {
+    [Language.EN]: "Rose Gold Eyeshadow Palette",
+    [Language.ZH]: "玫瑰金眼影盘",
+    [Language.JP]: "ローズゴールドアイシャドウパレット",
+    [Language.KR]: "로즈 골드 아이섀도우 팔레트",
+    [Language.FR]: "Palette d'Ombres à Paupières Rose Gold"
+  },
+  prod4Desc: {
+    [Language.EN]: "A versatile palette for day and night looks.",
+    [Language.ZH]: "一款适合日常和晚宴妆容的多功能眼影盘。",
+    [Language.JP]: "昼夜のルックに対応する多目的パレット。",
+    [Language.KR]: "낮과 밤의 룩을 위한 다재다능한 팔레트.",
+    [Language.FR]: "Une palette polyvalente pour les looks de jour et de nuit."
+  },
+  prod5Title: {
+    [Language.EN]: "Soft Blush - Peachy Keen",
+    [Language.ZH]: "柔和腮红 - 蜜桃色",
+    [Language.JP]: "ソフトブラッシュ - ピーチィキーン",
+    [Language.KR]: "소프트 블러셔 - 피치 킨",
+    [Language.FR]: "Blush Doux - Peachy Keen"
+  },
+  prod5Desc: {
+    [Language.EN]: "Adds a natural flush to your cheeks.",
+    [Language.ZH]: "为您的双颊增添自然红润气色。",
+    [Language.JP]: "頬に自然な赤みを与えます。",
+    [Language.KR]: "뺨에 자연스러운 홍조를 더해줍니다.",
+    [Language.FR]: "Ajoute un éclat naturel à vos joues."
+  },
+  prod6Title: {
+    [Language.EN]: "Liquid Eyeliner - Jet Black",
+    [Language.ZH]: "液体眼线笔 - 极黑色",
+    [Language.JP]: "リキッドアイライナー - ジェットブラック",
+    [Language.KR]: "리퀴드 아이라이너 - 젯 블랙",
+    [Language.FR]: "Eyeliner Liquide - Noir Intense"
+  },
+  prod6Desc: {
+    [Language.EN]: "Create sharp wings with ease.",
+    [Language.ZH]: "轻松勾勒锋利眼线。",
+    [Language.JP]: "シャープなウィングを簡単に作成できます。",
+    [Language.KR]: "날카로운 윙을 쉽게 연출할 수 있습니다.",
+    [Language.FR]: "Créez des traits précis en toute simplicité."
+  },
+  all: {
+    [Language.EN]: "All",
+    [Language.ZH]: "全部",
+    [Language.JP]: "すべて",
+    [Language.KR]: "전체",
+    [Language.FR]: "Tout"
+  },
+  lips: {
+    [Language.EN]: "Lips",
+    [Language.ZH]: "唇部",
+    [Language.JP]: "リップ",
+    [Language.KR]: "립",
+    [Language.FR]: "Lèvres"
+  },
+  face: {
+    [Language.EN]: "Face",
+    [Language.ZH]: "面部",
+    [Language.JP]: "フェイス",
+    [Language.KR]: "페이스",
+    [Language.FR]: "Visage"
+  },
+  eyes: {
+    [Language.EN]: "Eyes",
+    [Language.ZH]: "眼部",
+    [Language.JP]: "アイ",
+    [Language.KR]: "아이",
+    [Language.FR]: "Yeux"
+  },
+  skincare: {
+    [Language.EN]: "Skincare",
+    [Language.ZH]: "护肤",
+    [Language.JP]: "スキンケア",
+    [Language.KR]: "스킨케어",
+    [Language.FR]: "Soin"
+  },
+  next: {
+    [Language.EN]: "Next",
+    [Language.ZH]: "下一步",
+    [Language.JP]: "次へ",
+    [Language.KR]: "다음",
+    [Language.FR]: "Suivant"
+  },
+  startOver: {
+    [Language.EN]: "Start Over",
+    [Language.ZH]: "重新开始",
+    [Language.JP]: "最初から",
+    [Language.KR]: "다시 시작",
+    [Language.FR]: "Recommencer"
+  },
+  almond: {
+    [Language.EN]: "Almond",
+    [Language.ZH]: "杏仁眼",
+    [Language.JP]: "アーモンド型",
+    [Language.KR]: "아몬드형",
+    [Language.FR]: "Amande"
+  },
+  round: {
+    [Language.EN]: "Round",
+    [Language.ZH]: "圆眼",
+    [Language.JP]: "丸型",
+    [Language.KR]: "둥근형",
+    [Language.FR]: "Rond"
+  },
+  monolid: {
+    [Language.EN]: "Monolid",
+    [Language.ZH]: "单眼皮",
+    [Language.JP]: "一重まぶた",
+    [Language.KR]: "홑꺼풀",
+    [Language.FR]: "Monolide"
+  },
+  button: {
+    [Language.EN]: "Button",
+    [Language.ZH]: "小翘鼻",
+    [Language.JP]: "ボタン型",
+    [Language.KR]: "단추형",
+    [Language.FR]: "Bouton"
+  },
+  straight: {
+    [Language.EN]: "Straight",
+    [Language.ZH]: "直鼻",
+    [Language.JP]: "ストレート型",
+    [Language.KR]: "직선형",
+    [Language.FR]: "Droit"
+  },
+  wide: {
+    [Language.EN]: "Wide",
+    [Language.ZH]: "宽鼻",
+    [Language.JP]: "ワイド型",
+    [Language.KR]: "넓은형",
+    [Language.FR]: "Large"
+  },
+  full: {
+    [Language.EN]: "Full",
+    [Language.ZH]: "厚唇",
+    [Language.JP]: "フルリップ",
+    [Language.KR]: "도톰한 입술",
+    [Language.FR]: "Plein"
+  },
+  thin: {
+    [Language.EN]: "Thin",
+    [Language.ZH]: "薄唇",
+    [Language.JP]: "薄い唇",
+    [Language.KR]: "얇은 입술",
+    [Language.FR]: "Mince"
+  },
+  bow: {
+    [Language.EN]: "Cupid Bow",
+    [Language.ZH]: "M形唇",
+    [Language.JP]: "キューピッドボウ",
+    [Language.KR]: "큐피트 보우",
+    [Language.FR]: "Arc de Cupidon"
+  },
+  aiGenerated: {
+    [Language.EN]: "AI Generated",
+    [Language.ZH]: "AI 生成",
+    [Language.JP]: "AI生成",
+    [Language.KR]: "AI 생성됨",
+    [Language.FR]: "Généré par l'IA"
+  },
+  processing: {
+    [Language.EN]: "Processing...",
+    [Language.ZH]: "处理中...",
+    [Language.JP]: "処理中...",
+    [Language.KR]: "처리 중...",
+    [Language.FR]: "Traitement..."
+  },
+  applyMakeup: {
+    [Language.EN]: "Apply Makeup",
+    [Language.ZH]: "立即上妆",
+    [Language.JP]: "メイクを適用",
+    [Language.KR]: "메이크업 적용",
+    [Language.FR]: "Appliquer le maquillage"
+  },
+  tenKPlus: {
+    [Language.EN]: "10k+",
+    [Language.ZH]: "1万+",
+    [Language.JP]: "1万+",
+    [Language.KR]: "1만+",
+    [Language.FR]: "10k+"
   }
 };

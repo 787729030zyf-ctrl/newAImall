@@ -39,7 +39,9 @@ const Cart: React.FC<CartProps> = ({ items, lang, onUpdateQuantity, onRemove, on
               </div>
               <div className="flex-1 flex flex-col justify-between">
                 <div className="flex justify-between items-start">
-                  <h3 className="text-sm font-medium text-gray-800 line-clamp-2 leading-snug">{item.title}</h3>
+                  <h3 className="text-sm font-medium text-gray-800 line-clamp-2 leading-snug">
+                    {TRANSLATIONS[`prod${item.id}Title`]?.[lang] || item.title}
+                  </h3>
                   <button onClick={() => onRemove(item.id)} className="text-gray-300 hover:text-red-500 p-1">
                     <i className="fas fa-trash-alt text-xs"></i>
                   </button>

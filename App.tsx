@@ -33,7 +33,7 @@ const NavBar = ({ active, onChange, lang, cartCount }: { active: string, onChang
         <div className="w-14 h-14 bg-gradient-to-br from-primary to-rose-600 rounded-full flex items-center justify-center shadow-lg shadow-primary/40 text-white transform group-active:scale-95 transition-all duration-200 ring-4 ring-white">
            <i className="fas fa-magic text-2xl group-hover:rotate-12 transition-transform"></i>
         </div>
-        <span className={`${active === Page.AI_MAKEUP ? 'text-primary font-bold' : 'text-gray-400'}`}>AI</span>
+        <span className={`${active === Page.AI_MAKEUP ? 'text-primary font-bold' : 'text-gray-400'}`}>{lang === Language.ZH ? 'AI 试妆' : 'AI'}</span>
       </button>
       <button 
         onClick={() => onChange(Page.CART)}
@@ -47,7 +47,7 @@ const NavBar = ({ active, onChange, lang, cartCount }: { active: string, onChang
             </span>
           )}
         </div>
-        <span>Cart</span>
+        <span>{TRANSLATIONS.cart[lang]}</span>
       </button>
       <button 
         onClick={() => onChange(Page.PROFILE)}
@@ -79,7 +79,7 @@ const OrderSuccess = ({ onContinue, lang }: { onContinue: () => void, lang: Lang
          <i className="fas fa-check text-4xl text-green-500"></i>
        </div>
        <h2 className="text-2xl font-bold text-gray-800 mb-2">{TRANSLATIONS.orderSuccess[lang]}</h2>
-       <p className="text-gray-500 mb-8">Your beauty products are on the way!</p>
+       <p className="text-gray-500 mb-8">{TRANSLATIONS.orderSuccessDesc[lang]}</p>
        <button 
          onClick={onContinue}
          className="px-8 py-3 bg-gray-900 text-white rounded-full font-bold shadow-lg hover:scale-105 transition-transform"
@@ -103,8 +103,8 @@ const Profile: React.FC<{ lang: Language, onLogout: () => void }> = ({ lang, onL
       </div>
       
       <div className="mt-16 text-center px-6">
-        <h2 className="text-2xl font-bold text-gray-800">Lumina User</h2>
-        <p className="text-gray-500 text-sm">premium member</p>
+        <h2 className="text-2xl font-bold text-gray-800">{TRANSLATIONS.luminaUser[lang]}</h2>
+        <p className="text-gray-500 text-sm">{TRANSLATIONS.premiumMember[lang]}</p>
       </div>
 
       <div className="mt-8 px-6 space-y-4">
@@ -113,7 +113,7 @@ const Profile: React.FC<{ lang: Language, onLogout: () => void }> = ({ lang, onL
             <div className="w-10 h-10 bg-rose-50 rounded-full flex items-center justify-center text-primary">
               <i className="fas fa-heart"></i>
             </div>
-            <span className="font-medium text-gray-700">My Favorites</span>
+            <span className="font-medium text-gray-700">{TRANSLATIONS.myFavorites[lang]}</span>
           </div>
           <i className="fas fa-chevron-right text-gray-300 text-xs"></i>
         </div>
@@ -123,7 +123,7 @@ const Profile: React.FC<{ lang: Language, onLogout: () => void }> = ({ lang, onL
             <div className="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center text-blue-500">
               <i className="fas fa-box"></i>
             </div>
-            <span className="font-medium text-gray-700">My Orders</span>
+            <span className="font-medium text-gray-700">{TRANSLATIONS.myOrders[lang]}</span>
           </div>
           <i className="fas fa-chevron-right text-gray-300 text-xs"></i>
         </div>
@@ -133,7 +133,7 @@ const Profile: React.FC<{ lang: Language, onLogout: () => void }> = ({ lang, onL
             <div className="w-10 h-10 bg-purple-50 rounded-full flex items-center justify-center text-purple-500">
               <i className="fas fa-cog"></i>
             </div>
-            <span className="font-medium text-gray-700">Settings</span>
+            <span className="font-medium text-gray-700">{TRANSLATIONS.settings[lang]}</span>
           </div>
           <i className="fas fa-chevron-right text-gray-300 text-xs"></i>
         </div>
@@ -236,7 +236,7 @@ const Login: React.FC<{ onLogin: () => void, countryCode: string, setCountryCode
               {TRANSLATIONS.appTitle[lang]}
             </h1>
             <p className="text-gray-500 text-xs tracking-[0.2em] uppercase font-medium">
-              {lang === Language.EN ? 'Redefining Beauty' : '重塑美妆体验'}
+              {TRANSLATIONS.redefiningBeauty[lang]}
             </p>
           </div>
 
@@ -291,7 +291,7 @@ const Login: React.FC<{ onLogin: () => void, countryCode: string, setCountryCode
           <div className="mt-8">
             <div className="flex items-center gap-4 mb-6">
               <div className="h-px bg-gray-300/50 flex-1"></div>
-              <span className="text-gray-400 text-[10px] uppercase tracking-wider font-bold">{lang === Language.EN ? 'Or login with' : '其他登录方式'}</span>
+              <span className="text-gray-400 text-[10px] uppercase tracking-wider font-bold">{TRANSLATIONS.orLoginWith[lang]}</span>
               <div className="h-px bg-gray-300/50 flex-1"></div>
             </div>
             <div className="flex justify-center gap-5">
@@ -350,16 +350,20 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, onClose, lang, o
            <div className="flex items-baseline gap-2">
              <span className="text-3xl font-bold text-primary">{TRANSLATIONS.price[lang]}{product.price}</span>
            </div>
-           <span className="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded font-medium">Top Seller</span>
+           <span className="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded font-medium">{TRANSLATIONS.topSeller[lang]}</span>
         </div>
-        <h1 className="text-xl font-serif font-bold text-gray-900 mb-6 leading-snug">{product.title}</h1>
+        <h1 className="text-xl font-serif font-bold text-gray-900 mb-6 leading-snug">
+          {TRANSLATIONS[`prod${product.id}Title`]?.[lang] || product.title}
+        </h1>
         <div className="space-y-4">
            <div>
-             <h2 className="text-sm font-bold text-gray-800 mb-2 uppercase tracking-wide opacity-80">Description</h2>
-             <p className="text-sm text-gray-500 leading-relaxed font-light">{product.description}</p>
+             <h2 className="text-sm font-bold text-gray-800 mb-2 uppercase tracking-wide opacity-80">{TRANSLATIONS.description[lang]}</h2>
+             <p className="text-sm text-gray-500 leading-relaxed font-light">
+               {TRANSLATIONS[`prod${product.id}Desc`]?.[lang] || product.description}
+             </p>
            </div>
            <div>
-             <h2 className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide opacity-80">Tags</h2>
+             <h2 className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide opacity-80">{TRANSLATIONS.tags[lang]}</h2>
              <div className="flex flex-wrap gap-2">
                {product.tags.map(t => (
                  <span key={t} className="px-3 py-1.5 bg-gray-50 text-gray-600 border border-gray-100 text-xs rounded-full">{t}</span>
@@ -371,8 +375,8 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, onClose, lang, o
 
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-3 px-4 flex gap-3 h-[80px] items-center pb-6 z-50 max-w-md mx-auto">
         <div className="flex gap-6 px-2 mr-2 text-gray-400">
-           <div className="flex flex-col items-center cursor-pointer hover:text-gray-800 transition-colors"><i className="fas fa-store text-lg mb-0.5"></i><span className="text-[10px]">Shop</span></div>
-           <div className="flex flex-col items-center cursor-pointer hover:text-gray-800 transition-colors"><i className="fas fa-comment-dots text-lg mb-0.5"></i><span className="text-[10px]">Chat</span></div>
+           <div className="flex flex-col items-center cursor-pointer hover:text-gray-800 transition-colors"><i className="fas fa-store text-lg mb-0.5"></i><span className="text-[10px]">{TRANSLATIONS.shop[lang]}</span></div>
+           <div className="flex flex-col items-center cursor-pointer hover:text-gray-800 transition-colors"><i className="fas fa-comment-dots text-lg mb-0.5"></i><span className="text-[10px]">{TRANSLATIONS.chat[lang]}</span></div>
         </div>
         <button 
           onClick={() => onAddToCart(product)}
@@ -399,7 +403,15 @@ const Home: React.FC<{
 }> = ({ lang, onProductClick, countryCode, setCountryCode }) => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [isCountryOpen, setIsCountryOpen] = useState(false);
-  const categories = ['All', 'Lips', 'Face', 'Eyes', 'Skincare'];
+  
+  const categories = [
+    { id: 'All', label: TRANSLATIONS.all[lang] },
+    { id: 'Lips', label: TRANSLATIONS.lips[lang] },
+    { id: 'Face', label: TRANSLATIONS.face[lang] },
+    { id: 'Eyes', label: TRANSLATIONS.eyes[lang] },
+    { id: 'Skincare', label: TRANSLATIONS.skincare[lang] }
+  ];
+
   const filteredProducts = activeCategory === 'All' ? MOCK_PRODUCTS : MOCK_PRODUCTS.filter(p => p.category === activeCategory);
   
   const currentCountry = COUNTRIES.find(c => c.code === countryCode) || COUNTRIES[0];
@@ -410,7 +422,7 @@ const Home: React.FC<{
         <div className="flex items-center gap-3">
            <div className="flex-1 bg-gray-100 rounded-full h-10 flex items-center px-4 gap-2 border border-transparent focus-within:border-primary/30 focus-within:bg-white transition-all">
              <i className="fas fa-search text-gray-400 text-sm"></i>
-             <input type="text" placeholder="Search products..." className="bg-transparent text-sm w-full outline-none placeholder-gray-400 text-gray-700" />
+             <input type="text" placeholder={TRANSLATIONS.searchPlaceholder[lang]} className="bg-transparent text-sm w-full outline-none placeholder-gray-400 text-gray-700" />
            </div>
            
            {/* Home Country Selector */}
@@ -445,21 +457,21 @@ const Home: React.FC<{
       <div className="bg-white border-b border-gray-50 overflow-x-auto whitespace-nowrap px-4 py-4 flex gap-8 scrollbar-hide">
         {categories.map(c => (
           <button 
-            key={c}
-            onClick={() => setActiveCategory(c)}
-            className={`text-sm tracking-wide relative transition-colors ${activeCategory === c ? 'text-primary font-bold' : 'text-gray-500 font-medium hover:text-gray-800'}`}
+            key={c.id}
+            onClick={() => setActiveCategory(c.id)}
+            className={`text-sm tracking-wide relative transition-colors ${activeCategory === c.id ? 'text-primary font-bold' : 'text-gray-500 font-medium hover:text-gray-800'}`}
           >
-            {c}
-            {activeCategory === c && <div className="absolute -bottom-4 left-0 right-0 h-0.5 bg-primary rounded-t-full"></div>}
+            {c.label}
+            {activeCategory === c.id && <div className="absolute -bottom-4 left-0 right-0 h-0.5 bg-primary rounded-t-full"></div>}
           </button>
         ))}
       </div>
       <div className="p-4">
         <div className="w-full aspect-[2/1] rounded-2xl bg-gradient-to-r from-[#ff9a9e] to-[#fad0c4] flex items-center justify-between px-8 text-white shadow-xl shadow-pink-200/50 overflow-hidden relative group cursor-pointer">
            <div className="z-10 transform group-hover:translate-x-2 transition-transform duration-500">
-             <span className="bg-white/20 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider mb-2 inline-block">New Season</span>
-             <h2 className="font-serif font-bold text-2xl mb-1 leading-tight">Summer <br/>Collection</h2>
-             <p className="text-xs opacity-90 mt-2 font-medium">Up to 50% OFF</p>
+             <span className="bg-white/20 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider mb-2 inline-block">{TRANSLATIONS.newSeason[lang]}</span>
+             <h2 className="font-serif font-bold text-2xl mb-1 leading-tight">{TRANSLATIONS.summerCollection[lang].split(' ')[0]} <br/>{TRANSLATIONS.summerCollection[lang].split(' ')[1] || ''}</h2>
+             <p className="text-xs opacity-90 mt-2 font-medium">{TRANSLATIONS.off[lang]}</p>
            </div>
            <div className="absolute right-0 bottom-0 top-0 w-1/2 bg-gradient-to-l from-white/10 to-transparent"></div>
            <i className="fas fa-crown text-8xl opacity-10 absolute -right-4 -bottom-6 rotate-12 group-hover:rotate-0 transition-transform duration-700"></i>
@@ -467,8 +479,8 @@ const Home: React.FC<{
       </div>
       <div className="px-4">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-bold text-gray-800 text-lg">Popular</h3>
-          <button className="text-xs text-primary font-medium">See All</button>
+          <h3 className="font-bold text-gray-800 text-lg">{TRANSLATIONS.popular[lang]}</h3>
+          <button className="text-xs text-primary font-medium">{TRANSLATIONS.seeAll[lang]}</button>
         </div>
         <div className="grid grid-cols-2 gap-4">
           {filteredProducts.map(product => (

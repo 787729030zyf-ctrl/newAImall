@@ -23,14 +23,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, lang, onClick }) => 
       </div>
       <div className="p-3">
         <h3 className="text-sm text-gray-800 line-clamp-2 min-h-[40px] mb-2 font-medium">
-          {product.title}
+          {TRANSLATIONS[`prod${product.id}Title`]?.[lang] || product.title}
         </h3>
         <div className="flex items-baseline justify-between">
           <span className="text-primary text-lg font-bold">
             {TRANSLATIONS.price[lang]}{product.price}
           </span>
           <span className="text-xs text-gray-400">
-            {product.sales > 10000 ? '1万+' : product.sales} {TRANSLATIONS.sold[lang]}
+            {product.sales > 10000 ? TRANSLATIONS.tenKPlus[lang] : product.sales} {TRANSLATIONS.sold[lang]}
           </span>
         </div>
         <div className="mt-2 flex flex-wrap gap-1">
