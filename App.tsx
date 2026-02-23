@@ -49,9 +49,12 @@ const NavBar = ({ active, onChange, lang, cartCount }: { active: string, onChang
         </div>
         <span>Cart</span>
       </button>
-      <button className="flex flex-col items-center gap-1 text-gray-400 hover:text-gray-600 transition-colors">
+      <button 
+        onClick={() => onChange(Page.PROFILE)}
+        className={`flex flex-col items-center gap-1 ${active === Page.PROFILE ? 'text-primary font-bold scale-105 transition-transform' : 'text-gray-400 hover:text-gray-600 transition-colors'}`}
+      >
         <i className="fas fa-user text-xl"></i>
-        <span>Me</span>
+        <span>{TRANSLATIONS.profile[lang]}</span>
       </button>
     </div>
   );
@@ -83,6 +86,65 @@ const OrderSuccess = ({ onContinue, lang }: { onContinue: () => void, lang: Lang
        >
          {TRANSLATIONS.continueShopping[lang]}
        </button>
+    </div>
+  );
+};
+
+// --- Profile Page ---
+const Profile: React.FC<{ lang: Language, onLogout: () => void }> = ({ lang, onLogout }) => {
+  return (
+    <div className="min-h-screen bg-gray-50 pb-20 animate-fade-in">
+      <div className="bg-gradient-to-br from-primary to-rose-600 h-48 rounded-b-[3rem] relative shadow-lg">
+        <div className="absolute -bottom-12 left-1/2 -translate-x-1/2">
+          <div className="w-24 h-24 rounded-full border-4 border-white overflow-hidden shadow-xl bg-white">
+            <img src="https://picsum.photos/seed/user/200/200" alt="Avatar" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+          </div>
+        </div>
+      </div>
+      
+      <div className="mt-16 text-center px-6">
+        <h2 className="text-2xl font-bold text-gray-800">Lumina User</h2>
+        <p className="text-gray-500 text-sm">premium member</p>
+      </div>
+
+      <div className="mt-8 px-6 space-y-4">
+        <div className="bg-white p-4 rounded-2xl shadow-sm flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-rose-50 rounded-full flex items-center justify-center text-primary">
+              <i className="fas fa-heart"></i>
+            </div>
+            <span className="font-medium text-gray-700">My Favorites</span>
+          </div>
+          <i className="fas fa-chevron-right text-gray-300 text-xs"></i>
+        </div>
+        
+        <div className="bg-white p-4 rounded-2xl shadow-sm flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center text-blue-500">
+              <i className="fas fa-box"></i>
+            </div>
+            <span className="font-medium text-gray-700">My Orders</span>
+          </div>
+          <i className="fas fa-chevron-right text-gray-300 text-xs"></i>
+        </div>
+
+        <div className="bg-white p-4 rounded-2xl shadow-sm flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-purple-50 rounded-full flex items-center justify-center text-purple-500">
+              <i className="fas fa-cog"></i>
+            </div>
+            <span className="font-medium text-gray-700">Settings</span>
+          </div>
+          <i className="fas fa-chevron-right text-gray-300 text-xs"></i>
+        </div>
+
+        <button 
+          onClick={onLogout}
+          className="w-full mt-8 bg-white text-red-500 font-bold py-4 rounded-2xl shadow-sm border border-red-50 hover:bg-red-50 transition-colors"
+        >
+          {TRANSLATIONS.logout[lang]}
+        </button>
+      </div>
     </div>
   );
 };
@@ -558,6 +620,10 @@ const AppContent: React.FC = () => {
             onCheckout={handleCartCheckout}
             onBack={() => setActivePage(Page.HOME)}
           />
+        )}
+
+        {activePage === Page.PROFILE && (
+          <Profile lang={lang} onLogout={() => setIsLoggedIn(false)} />
         )}
       </div>
 

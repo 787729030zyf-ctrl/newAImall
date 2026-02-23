@@ -15,7 +15,7 @@ const Cart: React.FC<CartProps> = ({ items, lang, onUpdateQuantity, onRemove, on
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24 animate-fade-in-up">
+    <div className="min-h-screen bg-gray-50 pb-48 animate-fade-in-up">
       {/* Header */}
       <div className="bg-white shadow-sm sticky top-0 z-50 px-4 py-3 flex items-center">
         <button onClick={onBack} className="text-gray-600 px-2">
@@ -71,7 +71,7 @@ const Cart: React.FC<CartProps> = ({ items, lang, onUpdateQuantity, onRemove, on
 
       {/* Checkout Bar */}
       {items.length > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-4 pb-8 shadow-up z-40 max-w-md mx-auto">
+        <div className="fixed bottom-16 left-0 right-0 bg-white border-t border-gray-100 p-4 pb-6 shadow-up z-40 max-w-md mx-auto">
           <div className="flex items-center justify-between mb-2">
              <span className="text-gray-500 text-sm">{TRANSLATIONS.total[lang]}</span>
              <span className="text-2xl font-bold text-primary">{TRANSLATIONS.price[lang]}{total}</span>

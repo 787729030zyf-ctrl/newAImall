@@ -4,7 +4,8 @@ export enum Page {
   DETAIL = 'DETAIL',
   AI_MAKEUP = 'AI_MAKEUP',
   FACE_ANALYSIS = 'FACE_ANALYSIS',
-  CART = 'CART'
+  CART = 'CART',
+  PROFILE = 'PROFILE'
 }
 
 export enum Language {

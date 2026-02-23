@@ -275,5 +275,12 @@ export const TRANSLATIONS: Translation = {
     [Language.JP]: "カートに追加しました",
     [Language.KR]: "장바구니에 추가됨",
     [Language.FR]: "Ajouté au panier"
+  },
+  profile: {
+    [Language.EN]: "Me",
+    [Language.ZH]: "我的",
+    [Language.JP]: "マイページ",
+    [Language.KR]: "마이페이지",
+    [Language.FR]: "Moi"
   }
 };
