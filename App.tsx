@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { HashRouter } from 'react-router-dom';
+import { motion, AnimatePresence } from 'motion/react';
 import { Page, Language, Product, CartItem } from './types';
 import { MOCK_PRODUCTS, TRANSLATIONS, COUNTRIES } from './constants';
 import ProductCard from './components/ProductCard';
@@ -412,7 +413,11 @@ const Home: React.FC<{
     { id: 'Skincare', label: TRANSLATIONS.skincare[lang] }
   ];
 
-  const filteredProducts = activeCategory === 'All' ? MOCK_PRODUCTS : MOCK_PRODUCTS.filter(p => p.category === activeCategory);
+  const filteredProducts = MOCK_PRODUCTS.filter(p => {
+    const matchesCategory = activeCategory === 'All' || p.category === activeCategory;
+    const matchesRegion = !p.regions || p.regions.includes(countryCode);
+    return matchesCategory && matchesRegion;
+  });
   
   const currentCountry = COUNTRIES.find(c => c.code === countryCode) || COUNTRIES[0];
 
@@ -482,16 +487,29 @@ const Home: React.FC<{
           <h3 className="font-bold text-gray-800 text-lg">{TRANSLATIONS.popular[lang]}</h3>
           <button className="text-xs text-primary font-medium">{TRANSLATIONS.seeAll[lang]}</button>
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          {filteredProducts.map(product => (
-            <ProductCard 
-              key={product.id} 
-              product={product} 
-              lang={lang} 
-              onClick={onProductClick} 
-            />
-          ))}
-        </div>
+        <motion.div 
+          layout
+          className="grid grid-cols-2 gap-4"
+        >
+          <AnimatePresence mode="popLayout">
+            {filteredProducts.map(product => (
+              <motion.div
+                key={product.id}
+                layout
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ProductCard 
+                  product={product} 
+                  lang={lang} 
+                  onClick={onProductClick} 
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
       </div>
     </div>
   );

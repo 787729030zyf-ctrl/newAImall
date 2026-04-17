@@ -25,6 +25,7 @@ export interface Product {
   category: string;
   tags: string[];
   description: string;
+  regions?: string[];
 }
 
 export interface CartItem extends Product {

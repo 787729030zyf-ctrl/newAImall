@@ -12,23 +12,25 @@ export const COUNTRIES = [
 export const MOCK_PRODUCTS: Product[] = [
   {
     id: 1,
-    title: "Velvet Matte Lipstick - Ruby Woo",
+    title: "Velvet Matte Lipstick",
     price: 129,
     sales: 12000,
     image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?q=80&w=600&auto=format&fit=crop",
     category: "Lips",
     tags: ["Matte", "Long-lasting"],
-    description: "Iconic red lipstick with a velvet matte finish."
+    description: "Iconic red lipstick with a velvet matte finish.",
+    regions: ["US", "GB", "CN", "JP", "KR", "FR"]
   },
   {
     id: 2,
-    title: "Hydrating Foundation - Ivory",
+    title: "Hydrating Foundation",
     price: 249,
     sales: 8500,
     image: "https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?q=80&w=600&auto=format&fit=crop",
     category: "Face",
     tags: ["Full Coverage", "Hydrating"],
-    description: "Flawless coverage that lasts all day."
+    description: "Flawless coverage that lasts all day.",
+    regions: ["US", "GB", "FR"]
   },
   {
     id: 3,
@@ -38,37 +40,173 @@ export const MOCK_PRODUCTS: Product[] = [
     image: "https://images.unsplash.com/photo-1631214524020-7e18db9a8f92?q=80&w=600&auto=format&fit=crop",
     category: "Eyes",
     tags: ["Waterproof", "Black"],
-    description: "Dramatic volume and length for your lashes."
+    description: "Dramatic volume and length for your lashes.",
+    regions: ["US", "GB", "CN", "JP", "FR"]
   },
   {
     id: 4,
-    title: "Rose Gold Eyeshadow Palette",
+    title: "Rose Gold Eyeshadow",
     price: 320,
     sales: 5400,
     image: "https://zyflgj.oss-cn-beijing.aliyuncs.com/f70bfb49daaa62af702be204c12a51b3.jpg",
     category: "Eyes",
-    tags: ["Shimmer", "Matte", "12 Colors"],
-    description: "A versatile palette for day and night looks."
+    tags: ["Shimmer", "Matte"],
+    description: "A versatile palette for day and night looks.",
+    regions: ["US", "FR", "CN"]
   },
   {
     id: 5,
-    title: "Soft Blush - Peachy Keen",
+    title: "Soft Blush",
     price: 110,
     sales: 9000,
     image: "https://images.unsplash.com/photo-1557205465-f3762edea6d3?q=80&w=600&auto=format&fit=crop",
     category: "Face",
     tags: ["Natural", "Powder"],
-    description: "Adds a natural flush to your cheeks."
+    description: "Adds a natural flush to your cheeks.",
+    regions: ["GB", "KR", "JP"]
   },
   {
     id: 6,
-    title: "Liquid Eyeliner - Jet Black",
+    title: "Liquid Eyeliner",
     price: 75,
     sales: 15000,
     image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?q=80&w=600&auto=format&fit=crop",
     category: "Eyes",
     tags: ["Precise", "Waterproof"],
-    description: "Create sharp wings with ease."
+    description: "Create sharp wings with ease.",
+    regions: ["US", "GB", "CN", "JP", "KR", "FR"]
+  },
+  {
+    id: 7,
+    title: "Luxury Skincare Serum",
+    price: 580,
+    sales: 3200,
+    image: "https://zyflgj.oss-cn-beijing.aliyuncs.com/Gemini_Generated_Image_o9ocdao9ocdao9oc%20(2).png",
+    category: "Skincare",
+    tags: ["Anti-aging", "Radiance"],
+    description: "Premium formula for youthful, glowing skin.",
+    regions: ["CN", "JP", "KR"]
+  },
+  {
+    id: 8,
+    title: "Lavender Bath Oil",
+    price: 185,
+    sales: 4500,
+    image: "https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?q=80&w=600&auto=format&fit=crop",
+    category: "Skincare",
+    tags: ["Relieving", "Organic"],
+    description: "Relaxing bath essence with natural lavender extracts.",
+    regions: ["FR", "GB"]
+  },
+  {
+    id: 9,
+    title: "Waterproof Sunscreen",
+    price: 155,
+    sales: 18000,
+    image: "https://images.unsplash.com/photo-1556229010-6c3f2c9ca5f8?q=80&w=600&auto=format&fit=crop",
+    category: "Skincare",
+    tags: ["UV Protect", "Lightweight"],
+    description: "High performance protection for all outdoor activities.",
+    regions: ["US", "KR"]
+  },
+  {
+    id: 10,
+    title: "Cherry Blossom Primer",
+    price: 210,
+    sales: 6700,
+    image: "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?q=80&w=600&auto=format&fit=crop",
+    category: "Face",
+    tags: ["Poreless", "Brightening"],
+    description: "Silk smooth base for a long lasting glow.",
+    regions: ["JP", "CN"]
+  },
+  {
+    id: 11,
+    title: "Makeup Brush Set",
+    price: 450,
+    sales: 2100,
+    image: "https://images.unsplash.com/photo-1522338242992-e1a54906a8da?q=80&w=600&auto=format&fit=crop",
+    category: "Face",
+    tags: ["Synthetic"],
+    description: "Everything you need for expert makeup application.",
+    regions: ["US", "GB", "CN", "JP", "KR", "FR"]
+  },
+  {
+    id: 12,
+    title: "Deep Cleansing Foam",
+    price: 95,
+    sales: 25000,
+    image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=600&auto=format&fit=crop",
+    category: "Skincare",
+    tags: ["Pore Care", "Moisturizing"],
+    description: "Mild yet effective cleaning for daily routine.",
+    regions: ["KR", "JP"]
+  },
+  {
+    id: 13,
+    title: "High-Shine Lip Gloss",
+    price: 85,
+    sales: 11000,
+    image: "https://zyflgj.oss-cn-beijing.aliyuncs.com/Gemini_Generated_Image_o9ocdao9ocdao9oc.png",
+    category: "Lips",
+    tags: ["Non-sticky", "Plumping"],
+    description: "Brilliant shine and comfortable wear for daily looks.",
+    regions: ["US", "GB"]
+  },
+  {
+    id: 14,
+    title: "Tea Tree Soothing Mask",
+    price: 25,
+    sales: 42000,
+    image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=600&auto=format&fit=crop",
+    category: "Skincare",
+    tags: ["Tea Tree", "Calming"],
+    description: "Quick relief for troubled skin and redness.",
+    regions: ["CN", "KR"]
+  },
+  {
+    id: 15,
+    title: "Silk Night Repair Cream",
+    price: 420,
+    sales: 2800,
+    image: "https://images.unsplash.com/photo-1591130901921-3f0652bb3915?q=80&w=600&auto=format&fit=crop",
+    category: "Skincare",
+    tags: ["Overnight", "Nourishing"],
+    description: "Intensive repair while you sleep for velvety skin.",
+    regions: ["FR", "JP"]
+  },
+  {
+    id: 16,
+    title: "Radiant BB Cream",
+    price: 135,
+    sales: 31000,
+    image: "https://zyflgj.oss-cn-beijing.aliyuncs.com/Gemini_Generated_Image_ul2usrul2usrul2u.png",
+    category: "Face",
+    tags: ["Multi-benefit", "SPF 30"],
+    description: "Perfect blend of skincare and natural coverage.",
+    regions: ["KR", "CN", "JP"]
+  },
+  {
+    id: 17,
+    title: "Bold Brow Sculpt Gel",
+    price: 98,
+    sales: 7200,
+    image: "https://images.unsplash.com/photo-1625093742435-6fa192b6fb10?q=80&w=600&auto=format&fit=crop",
+    category: "Eyes",
+    tags: ["Tinted", "Definition"],
+    description: "Sculpt and define your brows with a long-wear formula.",
+    regions: ["US", "GB", "FR"]
+  },
+  {
+    id: 18,
+    title: "Mineral Setting Powder",
+    price: 195,
+    sales: 9600,
+    image: "https://zyflgj.oss-cn-beijing.aliyuncs.com/Gemini_Generated_Image_o9ocdao9ocdao9oc%20(1).png",
+    category: "Face",
+    tags: ["Mattifying", "Finishing"],
+    description: "Ulta-fine powder to lock your makeup in place.",
+    regions: ["FR", "US"]
   }
 ];
 
@@ -506,6 +644,174 @@ export const TRANSLATIONS: Translation = {
     [Language.JP]: "シャープなウィングを簡単に作成できます。",
     [Language.KR]: "날카로운 윙을 쉽게 연출할 수 있습니다.",
     [Language.FR]: "Créez des traits précis en toute simplicité."
+  },
+  prod7Title: {
+    [Language.EN]: "Luxury Skincare Serum",
+    [Language.ZH]: "奢宠修护精华液",
+    [Language.JP]: "ラグジュアリースキンケアセラム",
+    [Language.KR]: "럭셔리 스킨케어 세럼",
+    [Language.FR]: "Sérum de Soin de Luxe"
+  },
+  prod7Desc: {
+    [Language.EN]: "Premium formula for youthful, glowing skin.",
+    [Language.ZH]: "高端配方，打造年轻透亮的肌肤。",
+    [Language.JP]: "若々しく輝く肌のためのプレミアム処方。",
+    [Language.KR]: "어리고 빛나는 피부를 위한 프리미엄 포뮬러.",
+    [Language.FR]: "Formule premium pour une peau jeune et éclatante."
+  },
+  prod8Title: {
+    [Language.EN]: "French Lavender Bath Oil",
+    [Language.ZH]: "法国薰衣草沐浴油",
+    [Language.JP]: "フレンチラベンダーバスオイル",
+    [Language.KR]: "프렌치 라벤더 배스 오일",
+    [Language.FR]: "Huile de Bain Lavande Française"
+  },
+  prod8Desc: {
+    [Language.EN]: "Relaxing bath essence with natural lavender extracts.",
+    [Language.ZH]: "含天然薰衣草成分，舒缓身心的沐浴精华。",
+    [Language.JP]: "天然のラベンダーエキスを配合したリラックスバスエッセンス。",
+    [Language.KR]: "천연 라벤더 추출물이 함유된 릴랙싱 배스 에센스.",
+    [Language.FR]: "Essence de bain relaxante aux extraits naturels de lavande."
+  },
+  prod9Title: {
+    [Language.EN]: "Waterproof Sunscreen SPF 50",
+    [Language.ZH]: "防汗防水防晒霜 SPF 50",
+    [Language.JP]: "ウォータープルーフ日焼け止め SPF 50",
+    [Language.KR]: "워터프루프 선크림 SPF 50",
+    [Language.FR]: "Écran Solaire Imperméable SPF 50"
+  },
+  prod9Desc: {
+    [Language.EN]: "High performance protection for all outdoor activities.",
+    [Language.ZH]: "为户外活动提供高效防晒保护。",
+    [Language.JP]: "すべての屋外活動に適した高性能の保護。",
+    [Language.KR]: "모든 야외 활동을 위한 고성능 보호.",
+    [Language.FR]: "Protection haute performance pour toutes les activités de plein air."
+  },
+  prod10Title: {
+    [Language.EN]: "Cherry Blossom Primer",
+    [Language.ZH]: "樱花焕采隔离乳",
+    [Language.JP]: "チェリーブロッサムプライマー",
+    [Language.KR]: "체리 블라썸 프라이머",
+    [Language.FR]: "Base à la Fleur de Cerisier"
+  },
+  prod10Desc: {
+    [Language.EN]: "Silk smooth base for a long lasting glow.",
+    [Language.ZH]: "丝滑妆前底乳，持久焕发光彩。",
+    [Language.JP]: "輝きを持続させるシルクのように滑らかなベース。",
+    [Language.KR]: "오래 지속되는 광채를 위한 실크처럼 부드러운 베이스.",
+    [Language.FR]: "Base de teint soyeuse pour un éclat durable."
+  },
+  prod11Title: {
+    [Language.EN]: "Professional Makeup Brush Set",
+    [Language.ZH]: "专业彩妆刷套装",
+    [Language.JP]: "プロフェッショナルメイクブラシセット",
+    [Language.KR]: "전문가용 메이크업 브러쉬 세트",
+    [Language.FR]: "Ensemble de Pinceaux de Maquillage Professionnel"
+  },
+  prod11Desc: {
+    [Language.EN]: "Everything you need for expert makeup application.",
+    [Language.ZH]: "满足专家级上妆需求的一切工具。",
+    [Language.JP]: "エキスパートなメイクアップに必要なすべて。",
+    [Language.KR]: "전문적인 메이크업 적용을 위해 필요한 모든 것.",
+    [Language.FR]: "Tout ce dont vous avez besoin pour un maquillage d'expert."
+  },
+  prod12Title: {
+    [Language.EN]: "Deep Cleansing Foam",
+    [Language.ZH]: "深层洁面泡沫",
+    [Language.JP]: "ディープクレンジングフォーム",
+    [Language.KR]: "딥 클렌징 폼",
+    [Language.FR]: "Mousse Nettoyante en Profondeur"
+  },
+  prod12Desc: {
+    [Language.EN]: "Mild yet effective cleaning for daily routine.",
+    [Language.ZH]: "温和且高效的日常洁面程序。",
+    [Language.JP]: "日常のルーチンに適した、マイルドでありながら効果的な洗浄。",
+    [Language.KR]: "데일리 루틴을 위한 순하면서도 효과적인 세안.",
+    [Language.FR]: "Nettoyage doux mais efficace pour la routine quotidienne."
+  },
+  prod13Title: {
+    [Language.EN]: "High-Shine Lip Gloss",
+    [Language.ZH]: "高光泽唇釉",
+    [Language.JP]: "ハイシャインリップグロス",
+    [Language.KR]: "하이 샤인 립글로스",
+    [Language.FR]: "Brillant à Lèvres Haute Brillance"
+  },
+  prod13Desc: {
+    [Language.EN]: "Brilliant shine and comfortable wear for daily looks.",
+    [Language.ZH]: "亮泽迷人，佩戴舒适，适合日常妆容。",
+    [Language.JP]: "毎日のルックに輝きと快適な着け心地を。",
+    [Language.KR]: "데일리 룩을 위한 눈부신 광채와 편안한 착용감.",
+    [Language.FR]: "Une brillance éclatante et un confort optimal pour tous les jours."
+  },
+  prod14Title: {
+    [Language.EN]: "Tea Tree Soothing Mask",
+    [Language.ZH]: "茶树舒缓面膜",
+    [Language.JP]: "ティーツリー収れんマスク",
+    [Language.KR]: "티트리 수딩 마스크",
+    [Language.FR]: "Masque Apaisant à l'Arbre à Thé"
+  },
+  prod14Desc: {
+    [Language.EN]: "Quick relief for troubled skin and redness.",
+    [Language.ZH]: "快速缓解皮肤不适和红肿。",
+    [Language.JP]: "肌荒れや赤みを素早くケアします。",
+    [Language.KR]: "트러블 피부와 붉은 기를 빠르게 진정시켜줍니다.",
+    [Language.FR]: "Soulagement rapide pour les peaux à problèmes et les rougeurs."
+  },
+  prod15Title: {
+    [Language.EN]: "Silk Night Repair Cream",
+    [Language.ZH]: "蚕丝修护晚霜",
+    [Language.JP]: "シルクナイトリペアクリーム",
+    [Language.KR]: "실크 나이트 리페어 크림",
+    [Language.FR]: "Crème de Nuit Réparatrice en Soie"
+  },
+  prod15Desc: {
+    [Language.EN]: "Intensive repair while you sleep for velvety skin.",
+    [Language.ZH]: "睡眠期间深度修护，打造丝绒般肌肤。",
+    [Language.JP]: "睡眠中に集中ケアし、ベルベットのような肌へ。",
+    [Language.KR]: "잠든 사이 집중 리페어로 실크처럼 부드러운 피부를 만듭니다.",
+    [Language.FR]: "Réparation intensive pendant votre sommeil pour une peau de velours."
+  },
+  prod16Title: {
+    [Language.EN]: "Radiant BB Cream",
+    [Language.ZH]: "焕彩隔离 BB 霜",
+    [Language.JP]: "ラディアント BB クリーム",
+    [Language.KR]: "래디언트 BB 크림",
+    [Language.FR]: "BB Crème Éclatante"
+  },
+  prod16Desc: {
+    [Language.EN]: "Perfect blend of skincare and natural coverage.",
+    [Language.ZH]: "护肤成分与自然遮瑕的完美融合。",
+    [Language.JP]: "スキンケアと自然なカバー力の完璧なブレンド。",
+    [Language.KR]: "스킨케어와 자연스러운 커버리지의 완벽한 조화.",
+    [Language.FR]: "Mélange parfait de soin et de couvrance naturelle."
+  },
+  prod17Title: {
+    [Language.EN]: "Bold Brow Sculpt Gel",
+    [Language.ZH]: "眉部定型塑形膏",
+    [Language.JP]: "ボールドブロウスカルプトジェル",
+    [Language.KR]: "볼드 브로우 스컬프트 젤",
+    [Language.FR]: "Gel Sculptant pour Sourcils"
+  },
+  prod17Desc: {
+    [Language.EN]: "Sculpt and define your brows with a long-wear formula.",
+    [Language.ZH]: "长效定型配方，雕琢并定义您的眉形。",
+    [Language.JP]: "ロングウェア処方で見栄えの良い眉を演出します。",
+    [Language.KR]: "롱웨어 포뮬러로 눈썹을 조각하고 정의하세요.",
+    [Language.FR]: "Sculptez et définissez vos sourcils avec une formule longue tenue."
+  },
+  prod18Title: {
+    [Language.EN]: "Mineral Setting Powder",
+    [Language.ZH]: "矿物质定妆散粉",
+    [Language.JP]: "ミネラルセッティングパウダー",
+    [Language.KR]: "미네랄 세팅 파우더",
+    [Language.FR]: "Poudre de Fixation Minérale"
+  },
+  prod18Desc: {
+    [Language.EN]: "Ulta-fine powder to lock your makeup in place.",
+    [Language.ZH]: "超细粉质，持久锁定妆容。",
+    [Language.JP]: "メイクをしっかり固定する超微細パウダー。",
+    [Language.KR]: "메이크업을 고정해주는 울트라 파인 파우더.",
+    [Language.FR]: "Poudre ultra-fine pour fixer votre maquillage."
   },
   all: {
     [Language.EN]: "All",
