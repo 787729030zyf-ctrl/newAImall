@@ -5,18 +5,19 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:vercel": "npx vercel dev --yes --local",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "@google/genai": "^1.31.0",
     "motion": "^12.38.0",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "react-router-dom": "^7.10.0"
   },
   "devDependencies": {
+    "@vercel/node": "^5.5.15",
     "@types/node": "^22.14.0",
     "@vitejs/plugin-react": "^5.0.0",
     "typescript": "~5.8.2",

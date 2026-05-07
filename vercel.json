@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "name": "lumina-beauty-ai",
+  "installCommand": "npm install",
+  "functions": {
+    "api/image-edit.ts": {
+      "maxDuration": 60
+    }
+  }
+}

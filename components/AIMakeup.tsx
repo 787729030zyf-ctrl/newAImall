@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Language } from '../types';
 import { TRANSLATIONS } from '../constants';
-import { applyMakeup } from '../services/geminiService';
+import { editImageWithStability } from '../services/stabilityEditService';
 
 interface AIMakeupProps {
   lang: Language;
@@ -32,12 +32,15 @@ const AIMakeup: React.FC<AIMakeupProps> = ({ lang, onBack }) => {
 
     setLoading(true);
     try {
-      const base64Data = image.split(',')[1]; // Remove data:image/jpeg;base64, prefix
-      const editedBase64 = await applyMakeup(base64Data, prompt);
-      setResultImage(`data:image/jpeg;base64,${editedBase64}`);
+      const editedDataUrl = await editImageWithStability(image, prompt);
+      setResultImage(editedDataUrl);
     } catch (error) {
       console.error("Failed to apply makeup", error);
-      alert("Failed to generate makeup. Ensure API Key is set.");
+      const msg =
+        error instanceof Error ? error.message : "Unknown error";
+      alert(
+        msg.length > 400 ? `${msg.slice(0, 400)}…` : msg
+      );
     } finally {
       setLoading(false);
     }

@@ -2,19 +2,21 @@
 <img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
 
-# Run and deploy your AI Studio app
+# Lumina Beauty AI
 
-This contains everything you need to run your app locally.
+## Run locally
 
-View your app in AI Studio: https://ai.studio/apps/b055aab0-87da-4876-a646-dbbf2a85d7dd
+**Prerequisites:** Node.js
 
-## Run Locally
+1. `npm install`
+2. Copy `.env.example` → `.env.local`，填写 `STABILITY_API_KEY`（[Stability 控制台](https://platform.stability.ai/keys) 申请）。
+3. 本地开发（默认 Vite 会挂载与线上一致的 `POST /api/image-edit`）：
+   ```bash
+   npm run dev
+   ```
+4. 若要与线上完全一致、使用 Vercel CLI 跑 Functions（需已 `vercel link` 等）：
+   ```bash
+   npm run dev:vercel
+   ```
 
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+部署与接口说明见 [docs/API_IMAGE_EDIT_DEPLOY.md](docs/API_IMAGE_EDIT_DEPLOY.md)。
