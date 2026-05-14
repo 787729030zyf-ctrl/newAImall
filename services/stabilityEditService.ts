@@ -5,7 +5,11 @@
 export async function editImageWithStability(
   originalDataUrl: string,
   editPrompt: string,
-  options?: { strength?: number }
+  options?: {
+    strength?: number;
+    maskDataUrl?: string;
+    negativePrompt?: string;
+  }
 ): Promise<string> {
   const res = await fetch('/api/image-edit', {
     method: 'POST',
@@ -13,6 +17,8 @@ export async function editImageWithStability(
     body: JSON.stringify({
       original_image: originalDataUrl,
       edit_prompt: editPrompt,
+      mask_image: options?.maskDataUrl,
+      negative_prompt: options?.negativePrompt,
       strength: options?.strength,
     }),
   });

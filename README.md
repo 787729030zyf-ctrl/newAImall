@@ -9,14 +9,14 @@
 **Prerequisites:** Node.js
 
 1. `npm install`
-2. Copy `.env.example` → `.env.local`，填写 `STABILITY_API_KEY`（[Stability 控制台](https://platform.stability.ai/keys) 申请）。
-3. 本地开发（默认 Vite 会挂载与线上一致的 `POST /api/image-edit`）：
+2. Copy `.env.example` to `.env.local`, then fill in `STABILITY_API_KEY` from the [Stability console](https://platform.stability.ai/keys).
+3. Start local development. Vite mounts the same `POST /api/image-edit` API used in production:
    ```bash
    npm run dev
    ```
-4. 若要与线上完全一致、使用 Vercel CLI 跑 Functions（需已 `vercel link` 等）：
+4. Optional: use Vercel CLI to run the serverless function locally, after linking the project:
    ```bash
    npm run dev:vercel
    ```
 
-部署与接口说明见 [docs/API_IMAGE_EDIT_DEPLOY.md](docs/API_IMAGE_EDIT_DEPLOY.md)。
+Deployment and API details are documented in [docs/API_IMAGE_EDIT_DEPLOY.md](docs/API_IMAGE_EDIT_DEPLOY.md).

@@ -1,5 +1,7 @@
 const STABILITY_URL =
   'https://api.stability.ai/v2beta/stable-image/generate/sd3';
+const STABILITY_INPAINT_URL =
+  'https://api.stability.ai/v2beta/stable-image/edit/inpaint';
 
 export type ImageEditErrorBody = {
   error: string;
@@ -38,6 +40,8 @@ async function loadImageBuffer(
 
 /**
  * Shared Stability SD3 image-to-image pipeline for Vercel and local Vite dev.
+ * If mask_image is supplied, this switches to Stability inpaint so only the
+ * masked areas are edited.
  */
 export async function processImageEdit(
   body: unknown,
@@ -52,14 +56,22 @@ export async function processImageEdit(
   }
 
   let original_image: string;
+  let mask_image: string | undefined;
   let edit_prompt: string;
+  let negative_prompt: string | undefined;
   let strength: number | undefined;
   try {
     const b =
       typeof body === 'string' ? JSON.parse(body) : (body as Record<string, unknown>);
     original_image = b?.original_image as string;
+    mask_image =
+      typeof b?.mask_image === 'string' && b.mask_image.trim()
+        ? b.mask_image
+        : undefined;
     edit_prompt =
       typeof b?.edit_prompt === 'string' ? b.edit_prompt.trim() : '';
+    negative_prompt =
+      typeof b?.negative_prompt === 'string' ? b.negative_prompt.trim() : undefined;
     strength = b?.strength as number | undefined;
   } catch {
     return {
@@ -83,8 +95,12 @@ export async function processImageEdit(
       : 0.55;
 
   let img: { buffer: Buffer; mime: string };
+  let mask: { buffer: Buffer; mime: string } | undefined;
   try {
     img = await loadImageBuffer(original_image);
+    if (mask_image) {
+      mask = await loadImageBuffer(mask_image);
+    }
   } catch (e) {
     return {
       ok: false,
@@ -98,6 +114,13 @@ export async function processImageEdit(
       ok: false,
       status: 400,
       json: { error: 'Image too large (max ~15 MB)' },
+    };
+  }
+  if (mask && mask.buffer.length > 8 * 1024 * 1024) {
+    return {
+      ok: false,
+      status: 400,
+      json: { error: 'Mask image too large (max ~8 MB)' },
     };
   }
 
@@ -117,17 +140,40 @@ export async function processImageEdit(
     new Blob([bytes], { type: img.mime || 'image/jpeg' }),
     `input.${ext}`
   );
-  form.append('mode', 'image-to-image');
   form.append('prompt', edit_prompt);
-  form.append('strength', String(strengthVal));
   form.append('output_format', 'png');
+
+  if (negative_prompt) {
+    form.append('negative_prompt', negative_prompt);
+  }
+
+  if (mask) {
+    const maskExt = mask.mime.includes('webp')
+      ? 'webp'
+      : mask.mime.includes('jpg') || mask.mime.includes('jpeg')
+        ? 'jpg'
+        : 'png';
+    const maskBytes = new Uint8Array(
+      mask.buffer.buffer,
+      mask.buffer.byteOffset,
+      mask.buffer.byteLength
+    );
+    form.append(
+      'mask',
+      new Blob([maskBytes], { type: mask.mime || 'image/png' }),
+      `mask.${maskExt}`
+    );
+  } else {
+    form.append('mode', 'image-to-image');
+    form.append('strength', String(strengthVal));
+  }
 
   const controller = new AbortController();
   const kill = setTimeout(() => controller.abort(), 90_000);
 
   let stabilityRes: Response;
   try {
-    stabilityRes = await fetch(STABILITY_URL, {
+    stabilityRes = await fetch(mask ? STABILITY_INPAINT_URL : STABILITY_URL, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${apiKey}`,
@@ -153,7 +199,10 @@ export async function processImageEdit(
     console.error('Stability error', stabilityRes.status, errText);
     return {
       ok: false,
-      status: 502,
+      status:
+        stabilityRes.status >= 400 && stabilityRes.status < 500
+          ? stabilityRes.status
+          : 502,
       json: {
         error: 'Stability API request failed',
         status: stabilityRes.status,
