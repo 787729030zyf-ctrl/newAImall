@@ -1,4 +1,5 @@
 import { createServer } from 'node:http';
+import { readFileSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -6,6 +7,29 @@ import { fileURLToPath } from 'node:url';
 const rootDir = path.dirname(fileURLToPath(import.meta.url));
 const distDir = path.join(rootDir, 'dist');
 const port = Number(process.env.PORT || 3000);
+
+function loadLocalEnv() {
+  for (const fileName of ['.env.local', '.env']) {
+    try {
+      const content = readFileSync(path.join(rootDir, fileName), 'utf8');
+      for (const line of content.split(/\r?\n/)) {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('#')) continue;
+        const equalsIndex = trimmed.indexOf('=');
+        if (equalsIndex === -1) continue;
+        const key = trimmed.slice(0, equalsIndex).trim();
+        const value = trimmed.slice(equalsIndex + 1).trim().replace(/^['"]|['"]$/g, '');
+        if (key && process.env[key] === undefined) {
+          process.env[key] = value;
+        }
+      }
+    } catch {
+      // Local env files are optional. Render injects environment variables directly.
+    }
+  }
+}
+
+loadLocalEnv();
 
 const STABILITY_URL = 'https://api.stability.ai/v2beta/stable-image/generate/sd3';
 const STABILITY_INPAINT_URL = 'https://api.stability.ai/v2beta/stable-image/edit/inpaint';
@@ -31,6 +55,202 @@ function sendJson(res, status, body) {
     'Access-Control-Allow-Headers': 'Content-Type',
   });
   res.end(JSON.stringify(body));
+}
+
+function getLargeModelConfig() {
+  if (process.env.LLM_API_KEY && process.env.LLM_BASE_URL && process.env.LLM_MODEL) {
+    return {
+      provider: process.env.LLM_PROVIDER || 'custom-openai-compatible',
+      mode: 'chat',
+      url: process.env.LLM_BASE_URL.replace(/\/$/, '') + '/chat/completions',
+      apiKey: process.env.LLM_API_KEY,
+      model: process.env.LLM_MODEL,
+    };
+  }
+
+  if (process.env.OPENAI_API_KEY) {
+    return {
+      provider: 'openai',
+      mode: 'responses',
+      url: 'https://api.openai.com/v1/responses',
+      apiKey: process.env.OPENAI_API_KEY,
+      model: process.env.OPENAI_MODEL || 'gpt-4.1-mini',
+    };
+  }
+
+  if (process.env.DASHSCOPE_API_KEY) {
+    return {
+      provider: 'dashscope-qwen',
+      mode: 'chat',
+      url: 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions',
+      apiKey: process.env.DASHSCOPE_API_KEY,
+      model: process.env.DASHSCOPE_MODEL || 'qwen-plus',
+    };
+  }
+
+  if (process.env.DEEPSEEK_API_KEY) {
+    return {
+      provider: 'deepseek',
+      mode: 'chat',
+      url: 'https://api.deepseek.com/chat/completions',
+      apiKey: process.env.DEEPSEEK_API_KEY,
+      model: process.env.DEEPSEEK_MODEL || 'deepseek-chat',
+    };
+  }
+
+  return null;
+}
+
+function buildCosmeticPrompt(body) {
+  const context = Array.isArray(body?.contextSnippets)
+    ? body.contextSnippets.slice(0, 8).join('\n\n---\n\n')
+    : '';
+  const recommendations = Array.isArray(body?.recommendations)
+    ? body.recommendations
+        .slice(0, 3)
+        .map((item, index) => `${index + 1}. ${item.title} - $${item.price}; ${item.reason || ''}`)
+        .join('\n')
+    : '';
+
+  return `
+You are a professional cosmetic recommendation assistant for a shopping web app.
+Answer in Chinese unless the user asks for another language.
+Use the retrieved beauty knowledge and the product candidates below.
+Give complete advice. Do not use ellipses to truncate the answer.
+Be practical, concise, and explain why the recommended products match the user's skin tone, face shape, eye shape, nose shape, lip shape, budget, and preference.
+If the user asks for medical or irritation advice, add a short safety note and recommend patch testing or dermatologist advice when appropriate.
+
+User question:
+${body?.query || ''}
+
+Extracted profile:
+${JSON.stringify(body?.profile || {}, null, 2)}
+
+Retrieved beauty knowledge:
+${context}
+
+Product candidates:
+${recommendations}
+
+Required structure:
+1. 先直接回答用户的问题。
+2. 说明识别到的特征和搭配逻辑。
+3. 简要解释 3 个推荐商品为什么合适。
+`.trim();
+}
+
+function extractModelText(data) {
+  if (typeof data?.output_text === 'string') return data.output_text;
+  if (Array.isArray(data?.output)) {
+    const parts = [];
+    for (const item of data.output) {
+      if (Array.isArray(item?.content)) {
+        for (const content of item.content) {
+          if (typeof content?.text === 'string') parts.push(content.text);
+        }
+      }
+    }
+    if (parts.length) return parts.join('\n');
+  }
+  const chatText = data?.choices?.[0]?.message?.content;
+  if (typeof chatText === 'string') return chatText;
+  return '';
+}
+
+async function callLargeModel(prompt) {
+  const config = getLargeModelConfig();
+  if (!config) {
+    return {
+      ok: false,
+      status: 501,
+      json: {
+        error: 'No large model API key configured',
+        details: 'Set OPENAI_API_KEY, DASHSCOPE_API_KEY, DEEPSEEK_API_KEY, or LLM_API_KEY with LLM_BASE_URL and LLM_MODEL.',
+      },
+    };
+  }
+
+  const payload = config.mode === 'responses'
+    ? {
+        model: config.model,
+        input: [
+          {
+            role: 'user',
+            content: prompt,
+          },
+        ],
+        temperature: 0.4,
+      }
+    : {
+        model: config.model,
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a helpful professional beauty advisor.',
+          },
+          {
+            role: 'user',
+            content: prompt,
+          },
+        ],
+        temperature: 0.4,
+      };
+
+  const controller = new AbortController();
+  const kill = setTimeout(() => controller.abort(), 60_000);
+
+  try {
+    const response = await fetch(config.url, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${config.apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+    });
+
+    const data = await response.json().catch(async () => ({ raw: await response.text() }));
+    if (!response.ok) {
+      return {
+        ok: false,
+        status: response.status >= 400 && response.status < 500 ? response.status : 502,
+        json: {
+          error: 'Large model request failed',
+          provider: config.provider,
+          status: response.status,
+          details: JSON.stringify(data).slice(0, 800),
+        },
+      };
+    }
+
+    const answer = extractModelText(data).trim();
+    if (!answer) {
+      return {
+        ok: false,
+        status: 502,
+        json: { error: 'Large model returned an empty answer', provider: config.provider },
+      };
+    }
+
+    return {
+      ok: true,
+      answer,
+      provider: config.provider,
+      model: config.model,
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      status: 504,
+      json: {
+        error: 'Large model request timed out or failed',
+        details: error instanceof Error ? error.message : 'Request failed',
+      },
+    };
+  } finally {
+    clearTimeout(kill);
+  }
 }
 
 function readRawBody(req, maxBytes = 14 * 1024 * 1024) {
@@ -258,6 +478,57 @@ async function handleImageEdit(req, res) {
   res.end(result.buffer);
 }
 
+async function handleCosmeticChat(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    res.writeHead(204);
+    res.end();
+    return;
+  }
+
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST, OPTIONS');
+    sendJson(res, 405, { error: 'Method not allowed' });
+    return;
+  }
+
+  let raw;
+  try {
+    raw = await readRawBody(req);
+  } catch {
+    sendJson(res, 413, { error: 'Request body too large' });
+    return;
+  }
+
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    sendJson(res, 400, { error: 'Invalid JSON body' });
+    return;
+  }
+
+  if (!parsed?.query) {
+    sendJson(res, 400, { error: 'query is required' });
+    return;
+  }
+
+  const result = await callLargeModel(buildCosmeticPrompt(parsed));
+  if (result.ok === false) {
+    sendJson(res, result.status, result.json);
+    return;
+  }
+
+  sendJson(res, 200, {
+    answer: result.answer,
+    provider: result.provider,
+    model: result.model,
+  });
+}
+
 async function serveStatic(req, res) {
   const requestUrl = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`);
   const decodedPath = decodeURIComponent(requestUrl.pathname);
@@ -291,6 +562,10 @@ createServer(async (req, res) => {
     const pathname = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`).pathname;
     if (pathname === '/api/image-edit') {
       await handleImageEdit(req, res);
+      return;
+    }
+    if (pathname === '/api/cosmetic-chat') {
+      await handleCosmeticChat(req, res);
       return;
     }
     await serveStatic(req, res);

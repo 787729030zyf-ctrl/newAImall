@@ -5,6 +5,7 @@ import ProductCard from './ProductCard';
 import { COSMETIC_PRODUCTS, CosmeticProduct } from '../data/cosmeticsProducts';
 import {
   askCosmeticAssistant,
+  askCosmeticAssistantWithLLM,
   CosmeticAssistantResult,
   initializeCosmeticKnowledgeStore
 } from '../lib/cosmeticAssistantTool';
@@ -26,6 +27,7 @@ const CosmeticAssistantPage: React.FC<FaceAnalysisProps> = ({ lang, onProductCli
   const [result, setResult] = useState<CosmeticAssistantResult | null>(null);
   const [streamedAnswer, setStreamedAnswer] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
+  const [isModelThinking, setIsModelThinking] = useState(false);
   const categories = useMemo(() => ['All', 'Face', 'Eyes', 'Lips'], []);
   const [activeCategory, setActiveCategory] = useState('All');
 
@@ -58,12 +60,16 @@ const CosmeticAssistantPage: React.FC<FaceAnalysisProps> = ({ lang, onProductCli
 
   const products = COSMETIC_PRODUCTS.filter(product => activeCategory === 'All' || product.category === activeCategory);
 
-  const ask = (question = query) => {
+  const ask = async (question = query) => {
     const cleaned = question.trim();
     if (!cleaned) return;
     setQuery(cleaned);
-    setResult(null);
-    setResult(askCosmeticAssistant(cleaned));
+    const localResult = askCosmeticAssistant(cleaned);
+    setResult(localResult);
+    setIsModelThinking(true);
+    const modelResult = await askCosmeticAssistantWithLLM(cleaned);
+    setIsModelThinking(false);
+    setResult(modelResult);
   };
 
   const openProduct = (product: CosmeticProduct) => {
@@ -137,6 +143,13 @@ const CosmeticAssistantPage: React.FC<FaceAnalysisProps> = ({ lang, onProductCli
                 </div>
                 <div>
                   <h3 className="font-bold text-gray-900 text-sm">助手回答</h3>
+                  <p className="text-[11px] text-gray-400">
+                    {isModelThinking
+                      ? '正在调用大模型优化回答'
+                      : result.usedLargeModel
+                        ? `大模型回答${result.modelProvider ? ` · ${result.modelProvider}` : ''}`
+                        : '本地知识库回答'}
+                  </p>
                 </div>
               </div>
               <p className="whitespace-pre-line text-sm leading-6 text-gray-700">

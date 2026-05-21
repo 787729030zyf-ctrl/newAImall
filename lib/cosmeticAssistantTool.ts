@@ -1,12 +1,16 @@
 import { COSMETIC_PRODUCTS, CosmeticProduct } from '../data/cosmeticsProducts';
 import { COSMETICS_FEATURE_GUIDE } from '../data/cosmeticsFeatureGuide';
+import { ADVANCED_BEAUTY_KNOWLEDGE_FILES } from '../data/advancedBeautyKnowledge';
 
 export interface CosmeticAssistantResult {
   answer: string;
   recommendation: CosmeticProduct;
   recommendations: CosmeticProduct[];
   evidence: string[];
+  contextSnippets: string[];
   extractedProfile: Record<string, string>;
+  modelProvider?: string;
+  usedLargeModel?: boolean;
 }
 
 interface VectorRecord {
@@ -123,6 +127,13 @@ function buildVectorRecords(): VectorRecord[] {
     }))
     .filter(record => record.text.length > 0);
 
+  const advancedKnowledgeRecords = ADVANCED_BEAUTY_KNOWLEDGE_FILES.map(file => ({
+    id: file.id,
+    source: file.source,
+    text: `${file.title}\nSource: ${file.source}\n${file.content}`,
+    vector: vectorize(`${file.title}\n${file.source}\n${file.content}`)
+  }));
+
   const productRecords = COSMETIC_PRODUCTS.map(product => {
     const text = productKnowledgeText(product);
     return {
@@ -134,7 +145,7 @@ function buildVectorRecords(): VectorRecord[] {
     };
   });
 
-  return [...productRecords, ...guideSections];
+  return [...productRecords, ...guideSections, ...advancedKnowledgeRecords];
 }
 
 export function initializeCosmeticKnowledgeStore(): void {
@@ -146,6 +157,7 @@ export function initializeCosmeticKnowledgeStore(): void {
     guideCharacterCount: COSMETICS_FEATURE_GUIDE.length,
     products: COSMETIC_PRODUCTS,
     guide: COSMETICS_FEATURE_GUIDE,
+    advancedKnowledge: ADVANCED_BEAUTY_KNOWLEDGE_FILES,
     updatedAt: new Date().toISOString()
   };
 
@@ -301,7 +313,7 @@ function buildAnswer(query: string, profile: Record<string, string>, evidence: s
 
 export function askCosmeticAssistant(query: string): CosmeticAssistantResult {
   initializeCosmeticKnowledgeStore();
-  const retrieved = retrieveKnowledge(query, 4);
+  const retrieved = retrieveKnowledge(query, 8);
   const profile = extractProfile(query);
   const recommendations = chooseRecommendations(query, profile, 3);
 
@@ -310,8 +322,53 @@ export function askCosmeticAssistant(query: string): CosmeticAssistantResult {
     recommendation: recommendations[0],
     recommendations,
     evidence: retrieved.map(item => item.id),
-    extractedProfile: profile
+    contextSnippets: retrieved.map(item => item.text),
+    extractedProfile: profile,
+    usedLargeModel: false
   };
+}
+
+export async function askCosmeticAssistantWithLLM(query: string): Promise<CosmeticAssistantResult> {
+  const localResult = askCosmeticAssistant(query);
+
+  try {
+    const response = await fetch('/api/cosmetic-chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query,
+        profile: localResult.extractedProfile,
+        contextSnippets: localResult.contextSnippets,
+        recommendations: localResult.recommendations.map(product => ({
+          id: product.id,
+          title: product.title,
+          price: product.price,
+          category: product.category,
+          route: product.route,
+          reason: product.recommendationReason,
+          tags: product.tags
+        }))
+      })
+    });
+
+    if (!response.ok) {
+      return localResult;
+    }
+
+    const data = await response.json();
+    if (typeof data.answer !== 'string' || !data.answer.trim()) {
+      return localResult;
+    }
+
+    return {
+      ...localResult,
+      answer: data.answer.trim(),
+      modelProvider: typeof data.provider === 'string' ? data.provider : undefined,
+      usedLargeModel: true
+    };
+  } catch {
+    return localResult;
+  }
 }
 
 export function findCosmeticProductByRoute(route: string): CosmeticProduct | undefined {
