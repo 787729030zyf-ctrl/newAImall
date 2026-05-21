@@ -10,6 +10,10 @@ services:
         value: 20
       - key: STABILITY_API_KEY
         sync: false
+      - key: DASHSCOPE_API_KEY
+        sync: false
+      - key: DASHSCOPE_MODEL
+        value: qwen3-max
       - key: OPENAI_API_KEY
         sync: false
       - key: OPENAI_MODEL
