@@ -331,44 +331,42 @@ export function askCosmeticAssistant(query: string): CosmeticAssistantResult {
 export async function askCosmeticAssistantWithLLM(query: string): Promise<CosmeticAssistantResult> {
   const localResult = askCosmeticAssistant(query);
 
-  try {
-    const response = await fetch('/api/cosmetic-chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        query,
-        profile: localResult.extractedProfile,
-        contextSnippets: localResult.contextSnippets,
-        recommendations: localResult.recommendations.map(product => ({
-          id: product.id,
-          title: product.title,
-          price: product.price,
-          category: product.category,
-          route: product.route,
-          reason: product.recommendationReason,
-          tags: product.tags
-        }))
-      })
-    });
+  const response = await fetch('/api/cosmetic-chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      query,
+      profile: localResult.extractedProfile,
+      contextSnippets: localResult.contextSnippets,
+      recommendations: localResult.recommendations.map(product => ({
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        category: product.category,
+        route: product.route,
+        reason: product.recommendationReason,
+        tags: product.tags
+      }))
+    })
+  });
 
-    if (!response.ok) {
-      return localResult;
-    }
-
-    const data = await response.json();
-    if (typeof data.answer !== 'string' || !data.answer.trim()) {
-      return localResult;
-    }
-
-    return {
-      ...localResult,
-      answer: data.answer.trim(),
-      modelProvider: typeof data.provider === 'string' ? data.provider : undefined,
-      usedLargeModel: true
-    };
-  } catch {
-    return localResult;
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const message = typeof data.error === 'string' ? data.error : '大模型请求失败';
+    const details = typeof data.details === 'string' ? data.details : '';
+    throw new Error(details ? `${message}: ${details}` : message);
   }
+
+  if (typeof data.answer !== 'string' || !data.answer.trim()) {
+    throw new Error('大模型没有返回有效回答');
+  }
+
+  return {
+    ...localResult,
+    answer: data.answer.trim(),
+    modelProvider: typeof data.provider === 'string' ? data.provider : undefined,
+    usedLargeModel: true
+  };
 }
 
 export function findCosmeticProductByRoute(route: string): CosmeticProduct | undefined {

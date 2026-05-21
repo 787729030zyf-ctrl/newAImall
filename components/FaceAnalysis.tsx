@@ -4,7 +4,6 @@ import { Language, Product } from '../types';
 import ProductCard from './ProductCard';
 import { COSMETIC_PRODUCTS, CosmeticProduct } from '../data/cosmeticsProducts';
 import {
-  askCosmeticAssistant,
   askCosmeticAssistantWithLLM,
   CosmeticAssistantResult,
   initializeCosmeticKnowledgeStore
@@ -28,6 +27,7 @@ const CosmeticAssistantPage: React.FC<FaceAnalysisProps> = ({ lang, onProductCli
   const [streamedAnswer, setStreamedAnswer] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
   const [isModelThinking, setIsModelThinking] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const categories = useMemo(() => ['All', 'Face', 'Eyes', 'Lips'], []);
   const [activeCategory, setActiveCategory] = useState('All');
 
@@ -64,12 +64,18 @@ const CosmeticAssistantPage: React.FC<FaceAnalysisProps> = ({ lang, onProductCli
     const cleaned = question.trim();
     if (!cleaned) return;
     setQuery(cleaned);
-    const localResult = askCosmeticAssistant(cleaned);
-    setResult(localResult);
+    setResult(null);
+    setStreamedAnswer('');
+    setErrorMessage('');
     setIsModelThinking(true);
-    const modelResult = await askCosmeticAssistantWithLLM(cleaned);
-    setIsModelThinking(false);
-    setResult(modelResult);
+    try {
+      const modelResult = await askCosmeticAssistantWithLLM(cleaned);
+      setResult(modelResult);
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : '大模型回答失败，请稍后再试。');
+    } finally {
+      setIsModelThinking(false);
+    }
   };
 
   const openProduct = (product: CosmeticProduct) => {
@@ -130,6 +136,36 @@ const CosmeticAssistantPage: React.FC<FaceAnalysisProps> = ({ lang, onProductCli
         </div>
 
         <AnimatePresence>
+          {isModelThinking && (
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 16 }}
+              className="mt-4 bg-white border border-gray-100 rounded-lg p-4 shadow-sm"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+                  <i className="fas fa-spinner animate-spin text-sm"></i>
+                </div>
+                <div>
+                  <h3 className="font-bold text-gray-900 text-sm">正在调用大模型</h3>
+                  <p className="text-xs text-gray-500 mt-0.5">回答完成后会显示推荐商品卡</p>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {errorMessage && !isModelThinking && (
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 16 }}
+              className="mt-4 bg-red-50 border border-red-100 rounded-lg p-4 text-sm text-red-700"
+            >
+              {errorMessage}
+            </motion.div>
+          )}
+
           {result && (
             <motion.div
               initial={{ opacity: 0, y: 16 }}
@@ -144,11 +180,7 @@ const CosmeticAssistantPage: React.FC<FaceAnalysisProps> = ({ lang, onProductCli
                 <div>
                   <h3 className="font-bold text-gray-900 text-sm">助手回答</h3>
                   <p className="text-[11px] text-gray-400">
-                    {isModelThinking
-                      ? '正在调用大模型优化回答'
-                      : result.usedLargeModel
-                        ? `大模型回答${result.modelProvider ? ` · ${result.modelProvider}` : ''}`
-                        : '本地知识库回答'}
+                    {`大模型回答${result.modelProvider ? ` · ${result.modelProvider}` : ''}`}
                   </p>
                 </div>
               </div>
@@ -157,6 +189,7 @@ const CosmeticAssistantPage: React.FC<FaceAnalysisProps> = ({ lang, onProductCli
                 {isStreaming && <span className="ml-0.5 inline-block h-4 w-1 translate-y-0.5 animate-pulse bg-primary align-baseline"></span>}
               </p>
 
+              {!isStreaming && (
               <div className="mt-4 space-y-2">
                 {result.recommendations.map(product => (
                   <button
@@ -178,6 +211,7 @@ const CosmeticAssistantPage: React.FC<FaceAnalysisProps> = ({ lang, onProductCli
                   </button>
                 ))}
               </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
