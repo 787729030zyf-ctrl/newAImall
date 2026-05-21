@@ -1,7 +1,13 @@
-import React, { useState } from 'react';
-import { Language, Product, UserPreferences } from '../types';
-import { MOCK_PRODUCTS, TRANSLATIONS } from '../constants';
+import React, { useEffect, useMemo, useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Language, Product } from '../types';
 import ProductCard from './ProductCard';
+import { COSMETIC_PRODUCTS, CosmeticProduct } from '../data/cosmeticsProducts';
+import {
+  askCosmeticAssistant,
+  CosmeticAssistantResult,
+  initializeCosmeticKnowledgeStore
+} from '../lib/cosmeticAssistantTool';
 
 interface FaceAnalysisProps {
   lang: Language;
@@ -9,178 +15,196 @@ interface FaceAnalysisProps {
   onBack: () => void;
 }
 
-const FaceAnalysis: React.FC<FaceAnalysisProps> = ({ lang, onProductClick, onBack }) => {
-  const [step, setStep] = useState(1);
-  const [prefs, setPrefs] = useState<UserPreferences>({});
-  const [recommendations, setRecommendations] = useState<Product[]>([]);
+const EXAMPLE_QUESTIONS = [
+  '我是暖黄皮、圆脸、单眼皮、宽鼻、薄唇，预算 30 美元，想要日常自然妆。',
+  '冷白皮内双，想要约会感、显温柔的唇妆和腮红。',
+  '圆脸宽鼻，预算 20 美元以内，想要控油持久一点。',
+];
 
-  const eyes = [
-    { id: 'almond', label: TRANSLATIONS.almond[lang], icon: 'fa-eye' },
-    { id: 'round', label: TRANSLATIONS.round[lang], icon: 'fa-regular fa-eye' },
-    { id: 'monolid', label: TRANSLATIONS.monolid[lang], icon: 'fa-eye-slash' },
-  ];
+const CosmeticAssistantPage: React.FC<FaceAnalysisProps> = ({ lang, onProductClick, onBack }) => {
+  const [query, setQuery] = useState('');
+  const [result, setResult] = useState<CosmeticAssistantResult | null>(null);
+  const [streamedAnswer, setStreamedAnswer] = useState('');
+  const [isStreaming, setIsStreaming] = useState(false);
+  const categories = useMemo(() => ['All', 'Face', 'Eyes', 'Lips'], []);
+  const [activeCategory, setActiveCategory] = useState('All');
 
-  const noses = [
-    { id: 'button', label: TRANSLATIONS.button[lang], icon: 'fa-circle' },
-    { id: 'straight', label: TRANSLATIONS.straight[lang], icon: 'fa-grip-lines-vertical' },
-    { id: 'wide', label: TRANSLATIONS.wide[lang], icon: 'fa-cloud' },
-  ];
+  useEffect(() => {
+    initializeCosmeticKnowledgeStore();
+  }, []);
 
-  const lips = [
-    { id: 'full', label: TRANSLATIONS.full[lang], icon: 'fa-heart' },
-    { id: 'thin', label: TRANSLATIONS.thin[lang], icon: 'fa-minus' },
-    { id: 'bow', label: TRANSLATIONS.bow[lang], icon: 'fa-kiss-wink-heart' },
-  ];
-
-  const handleSelection = (type: keyof UserPreferences, value: string) => {
-    setPrefs(prev => ({ ...prev, [type]: value }));
-  };
-
-  const getRecommendations = () => {
-    // Simple mock logic for recommendation based on selection
-    // In a real app, this would use Gemini or a complex algorithm
-    let recs = [...MOCK_PRODUCTS];
-    if (prefs.eyeShape === 'monolid') {
-      recs = recs.filter(p => p.category === 'Eyes');
-    } else if (prefs.lipShape === 'full') {
-      recs = recs.filter(p => p.category === 'Lips');
-    } else {
-      recs = recs.filter(p => p.category === 'Face' || p.sales > 10000);
+  useEffect(() => {
+    if (!result) {
+      setStreamedAnswer('');
+      setIsStreaming(false);
+      return;
     }
-    setRecommendations(recs.slice(0, 4));
-    setStep(4);
+
+    setStreamedAnswer('');
+    setIsStreaming(true);
+    let index = 0;
+    const answer = result.answer;
+    const timer = window.setInterval(() => {
+      index += 1;
+      setStreamedAnswer(answer.slice(0, index));
+      if (index >= answer.length) {
+        window.clearInterval(timer);
+        setIsStreaming(false);
+      }
+    }, 18);
+
+    return () => window.clearInterval(timer);
+  }, [result]);
+
+  const products = COSMETIC_PRODUCTS.filter(product => activeCategory === 'All' || product.category === activeCategory);
+
+  const ask = (question = query) => {
+    const cleaned = question.trim();
+    if (!cleaned) return;
+    setQuery(cleaned);
+    setResult(null);
+    setResult(askCosmeticAssistant(cleaned));
   };
 
-  const SelectionCard = ({ 
-    options, 
-    currentValue, 
-    field, 
-    title 
-  }: { 
-    options: any[], 
-    currentValue: string | undefined, 
-    field: keyof UserPreferences, 
-    title: string 
-  }) => (
-    <div className="mb-8 animate-fade-in-up">
-      <h3 className="text-xl font-serif text-gray-800 mb-6 text-center">{title}</h3>
-      <div className="grid grid-cols-3 gap-4">
-        {options.map((opt) => (
-          <button
-            key={opt.id}
-            onClick={() => handleSelection(field, opt.id)}
-            className={`
-              flex flex-col items-center justify-center p-6 rounded-2xl border-2 transition-all duration-300
-              ${currentValue === opt.id 
-                ? 'border-primary bg-accent text-primary scale-105 shadow-lg' 
-                : 'border-gray-200 bg-white text-gray-500 hover:border-primary/50'}
-            `}
-          >
-            <i className={`fas ${opt.icon} text-3xl mb-3`}></i>
-            <span className="text-sm font-medium">{opt.label}</span>
-          </button>
-        ))}
-      </div>
-    </div>
-  );
+  const openProduct = (product: CosmeticProduct) => {
+    window.location.hash = product.route;
+    onProductClick(product);
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
-      {/* Header */}
+    <div className="min-h-screen bg-gray-50 pb-24">
       <div className="bg-white shadow-sm sticky top-0 z-50 px-4 py-3 flex items-center">
-        <button onClick={onBack} className="text-gray-600 px-2">
+        <button onClick={onBack} className="text-gray-600 px-2" aria-label="Back">
           <i className="fas fa-arrow-left"></i>
         </button>
-        <h1 className="flex-1 text-center font-bold text-lg">{TRANSLATIONS.faceAnalysis[lang]}</h1>
+        <h1 className="flex-1 text-center font-bold text-lg">
+          {lang === Language.ZH ? '化妆品推荐助手' : 'Beauty Advisor'}
+        </h1>
         <div className="w-8"></div>
       </div>
 
-      <div className="max-w-md mx-auto p-6">
-        {step < 4 && (
-          <div className="mb-8">
-             <div className="flex justify-between mb-2">
-               {[1, 2, 3].map(i => (
-                 <div key={i} className={`h-1 flex-1 mx-1 rounded-full ${i <= step ? 'bg-primary' : 'bg-gray-200'}`} />
-               ))}
-             </div>
-             <p className="text-center text-gray-500 text-sm mt-4">
-               {TRANSLATIONS.analyzeDesc[lang]}
-             </p>
+      <div className="px-4 pt-4">
+        <div className="bg-white border border-rose-100 rounded-lg p-4 shadow-sm">
+          <div className="flex items-center justify-between gap-3 mb-3">
+            <div>
+              <p className="text-xs font-bold text-primary uppercase tracking-wide">Beauty Advisor</p>
+              <h2 className="text-xl font-serif font-bold text-gray-900 mt-1">个人定制化妆助手</h2>
+            </div>
+            <div className="w-11 h-11 rounded-full bg-accent text-primary flex items-center justify-center shrink-0">
+              <i className="fas fa-wand-magic-sparkles"></i>
+            </div>
           </div>
-        )}
 
-        {step === 1 && (
-          <SelectionCard 
-            title={TRANSLATIONS.selectEye[lang]} 
-            options={eyes} 
-            field="eyeShape" 
-            currentValue={prefs.eyeShape} 
+          <textarea
+            value={query}
+            onChange={event => setQuery(event.target.value)}
+            rows={4}
+            placeholder="描述肤色、脸型、眼型、鼻型、唇形、预算和偏好，例如：暖黄皮、圆脸、单眼皮、薄唇，预算 30 美元，想要日常自然妆。"
+            className="w-full resize-none rounded-lg border border-gray-200 bg-gray-50 px-3 py-3 text-sm text-gray-800 outline-none focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/10"
           />
-        )}
 
-        {step === 2 && (
-          <SelectionCard 
-            title={TRANSLATIONS.selectNose[lang]} 
-            options={noses} 
-            field="noseShape" 
-            currentValue={prefs.noseShape} 
-          />
-        )}
-
-        {step === 3 && (
-          <SelectionCard 
-            title={TRANSLATIONS.selectLip[lang]} 
-            options={lips} 
-            field="lipShape" 
-            currentValue={prefs.lipShape} 
-          />
-        )}
-
-        {step === 4 && (
-          <div className="animate-fade-in">
-             <h2 className="text-2xl font-serif text-center mb-6 text-gray-800">
-               {TRANSLATIONS.recommendations[lang]}
-             </h2>
-             <div className="grid grid-cols-2 gap-4">
-               {recommendations.map(p => (
-                 <ProductCard 
-                   key={p.id} 
-                   product={p} 
-                   lang={lang} 
-                   onClick={onProductClick} 
-                 />
-               ))}
-             </div>
-             <button 
-               onClick={() => { setStep(1); setPrefs({}); }}
-               className="w-full mt-8 py-3 text-gray-500 font-medium underline"
-             >
-               {TRANSLATIONS.startOver[lang]}
-             </button>
-          </div>
-        )}
-
-        {step < 4 && (
           <button
-            disabled={
-              (step === 1 && !prefs.eyeShape) ||
-              (step === 2 && !prefs.noseShape) ||
-              (step === 3 && !prefs.lipShape)
-            }
-            onClick={() => step === 3 ? getRecommendations() : setStep(s => s + 1)}
-            className={`
-              w-full py-3.5 rounded-full text-white font-bold text-lg shadow-lg mt-6 transition-all
-              ${((step === 1 && !prefs.eyeShape) || (step === 2 && !prefs.noseShape) || (step === 3 && !prefs.lipShape))
-                ? 'bg-gray-300 cursor-not-allowed' 
-                : 'bg-gradient-to-r from-primary to-pink-500 hover:shadow-xl transform hover:-translate-y-0.5'}
-            `}
+            onClick={() => ask()}
+            className="mt-3 w-full h-11 rounded-full bg-gradient-to-r from-primary to-rose-600 text-white font-bold shadow-lg shadow-primary/25 active:scale-[0.98] transition-transform"
           >
-            {step === 3 ? TRANSLATIONS.getResults[lang] : TRANSLATIONS.next[lang]}
+            询问并推荐商品
           </button>
-        )}
+
+          <div className="mt-3 flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+            {EXAMPLE_QUESTIONS.map(example => (
+              <button
+                key={example}
+                onClick={() => ask(example)}
+                className="shrink-0 max-w-[260px] text-left rounded-full border border-gray-200 bg-white px-3 py-2 text-xs text-gray-600 hover:border-primary hover:text-primary transition-colors truncate"
+              >
+                {example}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <AnimatePresence>
+          {result && (
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 16 }}
+              className="mt-4 bg-white border border-gray-100 rounded-lg p-4 shadow-sm"
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-8 h-8 rounded-full bg-gray-900 text-white flex items-center justify-center">
+                  <i className="fas fa-comment-dots text-sm"></i>
+                </div>
+                <div>
+                  <h3 className="font-bold text-gray-900 text-sm">助手回答</h3>
+                </div>
+              </div>
+              <p className="whitespace-pre-line text-sm leading-6 text-gray-700">
+                {streamedAnswer}
+                {isStreaming && <span className="ml-0.5 inline-block h-4 w-1 translate-y-0.5 animate-pulse bg-primary align-baseline"></span>}
+              </p>
+
+              <div className="mt-4 space-y-2">
+                {result.recommendations.map(product => (
+                  <button
+                    key={product.id}
+                    onClick={() => openProduct(product)}
+                    className="w-full rounded-lg border border-rose-100 bg-rose-50 p-3 flex items-center gap-3 text-left hover:bg-rose-100 transition-colors"
+                  >
+                    <img
+                      src={product.image}
+                      alt={product.title}
+                      className="w-14 h-14 rounded-lg object-cover bg-white"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[11px] font-bold text-primary mb-1">推荐商品卡</p>
+                      <h4 className="font-bold text-gray-900 text-sm whitespace-normal leading-5">{product.title}</h4>
+                      <p className="text-primary font-bold mt-1">${product.price}</p>
+                    </div>
+                    <i className="fas fa-chevron-right text-primary text-xs"></i>
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <div className="mt-6 mb-4 flex items-center justify-between">
+          <h3 className="font-bold text-gray-900 text-lg">推荐商品</h3>
+        </div>
+
+        <div className="bg-white border-y border-gray-100 -mx-4 px-4 py-3 flex gap-6 overflow-x-auto sticky top-[53px] z-40 scrollbar-hide">
+          {categories.map(category => (
+            <button
+              key={category}
+              onClick={() => setActiveCategory(category)}
+              className={`text-sm font-bold relative ${activeCategory === category ? 'text-primary' : 'text-gray-500'}`}
+            >
+              {category === 'All' ? '全部' : category === 'Face' ? '底妆/脸部' : category === 'Eyes' ? '眼妆/眉毛' : '唇妆'}
+              {activeCategory === category && <span className="absolute -bottom-3 left-0 right-0 h-0.5 bg-primary rounded-full"></span>}
+            </button>
+          ))}
+        </div>
+
+        <motion.div layout className="grid grid-cols-2 gap-4 mt-4">
+          <AnimatePresence mode="popLayout">
+            {products.map(product => (
+              <motion.div
+                key={product.id}
+                layout
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.96 }}
+                transition={{ duration: 0.2 }}
+              >
+                <ProductCard product={product} lang={lang} onClick={() => openProduct(product)} />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
       </div>
     </div>
   );
 };
 
-export default FaceAnalysis;
+export default CosmeticAssistantPage;

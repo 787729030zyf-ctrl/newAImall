@@ -7,6 +7,7 @@ import ProductCard from './components/ProductCard';
 import AIMakeup from './components/AIMakeup';
 import FaceAnalysis from './components/FaceAnalysis';
 import Cart from './components/Cart';
+import { findCosmeticProductByRoute } from './lib/cosmeticAssistantTool';
 
 // --- Helper Components ---
 
@@ -24,8 +25,8 @@ const NavBar = ({ active, onChange, lang, cartCount }: { active: string, onChang
         onClick={() => onChange(Page.FACE_ANALYSIS)}
         className={`flex flex-col items-center gap-1 ${active === Page.FACE_ANALYSIS ? 'text-primary font-bold scale-105 transition-transform' : 'text-gray-400'}`}
       >
-        <i className="fas fa-grin-stars text-xl"></i>
-        <span>{TRANSLATIONS.faceAnalysis[lang]}</span>
+        <i className="fas fa-gem text-xl"></i>
+        <span>{lang === Language.ZH ? '美妆推荐' : 'Advisor'}</span>
       </button>
       <button 
         onClick={() => onChange(Page.AI_MAKEUP)}
@@ -336,7 +337,14 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, onClose, lang, o
   return (
     <div className="fixed inset-0 z-[60] bg-white overflow-y-auto animate-fade-in-up">
       <div className="relative">
-        <img src={product.image} className="w-full aspect-square object-cover" alt={product.title} />
+        <img
+          src={product.image}
+          className="w-full aspect-square object-cover"
+          alt={product.title}
+          onError={(event) => {
+            event.currentTarget.src = 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=600&auto=format&fit=crop';
+          }}
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent opacity-60"></div>
         <button 
           onClick={onClose}
@@ -371,6 +379,19 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, onClose, lang, o
                ))}
             </div>
            </div>
+           {product.route && (
+             <div>
+               <h2 className="text-sm font-bold text-gray-800 mb-3 uppercase tracking-wide opacity-80">Beauty Match</h2>
+               <div className="space-y-2 text-xs text-gray-600">
+                 {product.suitableSkinTone && <p><span className="font-bold text-gray-800">肤色：</span>{product.suitableSkinTone.join(' / ')}</p>}
+                 {product.suitableFaceShape && <p><span className="font-bold text-gray-800">脸型：</span>{product.suitableFaceShape.join(' / ')}</p>}
+                 {product.suitableEyeShape && <p><span className="font-bold text-gray-800">眼型：</span>{product.suitableEyeShape.join(' / ')}</p>}
+                 {product.suitableNoseShape && <p><span className="font-bold text-gray-800">鼻型：</span>{product.suitableNoseShape.join(' / ')}</p>}
+                 {product.suitableLipShape && <p><span className="font-bold text-gray-800">唇形：</span>{product.suitableLipShape.join(' / ')}</p>}
+                 {product.recommendationReason && <p className="leading-5 pt-1">{product.recommendationReason}</p>}
+               </div>
+             </div>
+           )}
         </div>
       </div>
 
@@ -533,6 +554,21 @@ const AppContent: React.FC = () => {
   const [showOrderSuccess, setShowOrderSuccess] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
+  useEffect(() => {
+    const syncProductRoute = () => {
+      const route = window.location.hash.replace(/^#/, '') || window.location.pathname;
+      const cosmeticProduct = findCosmeticProductByRoute(route);
+      if (cosmeticProduct) {
+        setActivePage(Page.FACE_ANALYSIS);
+        setSelectedProduct(cosmeticProduct);
+      }
+    };
+
+    syncProductRoute();
+    window.addEventListener('hashchange', syncProductRoute);
+    return () => window.removeEventListener('hashchange', syncProductRoute);
+  }, []);
+
   // --- Handlers ---
 
   const showToast = (msg: string) => {
@@ -575,6 +611,20 @@ const AppContent: React.FC = () => {
       setShowOrderSuccess(true);
       setSelectedProduct(null); // Close modal
     }, 1500);
+  };
+
+  const handleProductClick = (product: Product) => {
+    if (product.route) {
+      window.location.hash = product.route;
+    }
+    setSelectedProduct(product);
+  };
+
+  const closeProductDetail = () => {
+    setSelectedProduct(null);
+    if (window.location.hash.startsWith('#/cosmetics/product/')) {
+      window.location.hash = '/cosmetics';
+    }
   };
 
   const handleCartCheckout = () => {
@@ -627,14 +677,14 @@ const AppContent: React.FC = () => {
         {activePage === Page.HOME && (
           <Home 
             lang={lang} 
-            onProductClick={setSelectedProduct} 
+            onProductClick={handleProductClick} 
             countryCode={countryCode}
             setCountryCode={setCountryCode}
           />
         )}
         
         {activePage === Page.FACE_ANALYSIS && (
-          <FaceAnalysis lang={lang} onProductClick={setSelectedProduct} onBack={() => setActivePage(Page.HOME)} />
+          <FaceAnalysis lang={lang} onProductClick={handleProductClick} onBack={() => setActivePage(Page.HOME)} />
         )}
 
         {activePage === Page.AI_MAKEUP && (
@@ -662,7 +712,7 @@ const AppContent: React.FC = () => {
         <ProductDetail 
           product={selectedProduct} 
           lang={lang} 
-          onClose={() => setSelectedProduct(null)} 
+          onClose={closeProductDetail} 
           onAddToCart={addToCart}
           onBuyNow={handleBuyNow}
         />

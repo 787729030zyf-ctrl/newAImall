@@ -19,6 +19,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, lang, onClick }) => 
           src={product.image} 
           alt={product.title} 
           className="absolute inset-0 w-full h-full object-cover"
+          onError={(event) => {
+            event.currentTarget.src = 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=600&auto=format&fit=crop';
+          }}
         />
       </div>
       <div className="p-3">

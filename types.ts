@@ -26,6 +26,13 @@ export interface Product {
   tags: string[];
   description: string;
   regions?: string[];
+  route?: string;
+  suitableSkinTone?: string[];
+  suitableFaceShape?: string[];
+  suitableEyeShape?: string[];
+  suitableNoseShape?: string[];
+  suitableLipShape?: string[];
+  recommendationReason?: string;
 }
 
 export interface CartItem extends Product {

@@ -155,10 +155,33 @@ const AIMakeup: React.FC<AIMakeupProps> = ({ lang, onBack }) => {
               <i className="fas fa-camera text-4xl text-zinc-600 mb-2"></i>
               <span className="text-zinc-500">{TRANSLATIONS.uploadImage[lang]}</span>
             </div>
+          ) : resultImage ? (
+            <div className="grid grid-cols-2 w-full h-full bg-black">
+              <div className="relative h-full border-r border-white/10">
+                <img
+                  src={image}
+                  alt="Original upload"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute bottom-2 left-2 bg-black/70 px-2 py-1 rounded text-xs">
+                  {lang === Language.ZH ? '原图' : 'Before'}
+                </div>
+              </div>
+              <div className="relative h-full">
+                <img
+                  src={resultImage}
+                  alt="AI makeup result"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute bottom-2 right-2 bg-primary/90 px-2 py-1 rounded text-xs font-semibold">
+                  {lang === Language.ZH ? '试妆后' : 'After'}
+                </div>
+              </div>
+            </div>
           ) : (
             <div className="relative w-full h-full">
               <img
-                src={resultImage || image}
+                src={image}
                 alt="Makeup Trial"
                 className="w-full h-full object-cover"
               />
@@ -168,12 +191,6 @@ const AIMakeup: React.FC<AIMakeupProps> = ({ lang, onBack }) => {
                   alt="Makeup mask"
                   className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-screen"
                 />
-              )}
-              {/* Split View Slider Simulation (Visual only for effect) */}
-              {resultImage && (
-                 <div className="absolute bottom-2 right-2 bg-black/60 px-2 py-1 rounded text-xs">
-                    {TRANSLATIONS.aiGenerated[lang]}
-                 </div>
               )}
               {loading && (
                 <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center z-10 backdrop-blur-sm">
